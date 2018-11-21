@@ -8,11 +8,13 @@ const BossActions = {
 //第一阶段//////////////////////////////////////////
 	103: {msg: '前砸(闪避)'},
 
-	117: {msg: '跳劈(击倒)'},
-	118: {msg: '跳劈(击倒)'},
+	117: {msg: '跳劈(击倒)117'},
+	118: {msg: '跳劈(击倒)118'},
 
 	108: {msg: '丢锤(晕眩)'},
-	137: {msg: '后砸'},
+
+	111: {msg0: '后砸(慢)'},
+//	137: {msg: '后砸'},
 
 	131: {msg: '前砸 -> 后推'},
 	139: {msg: '转圈(全屏击倒)'},
@@ -20,8 +22,10 @@ const BossActions = {
 	121: {msg: '左脚(4连火焰)'},
 	140: {msg: '右脚(4连火焰)'},
 
-	113: {msg: '点名小心'},
-	114: {msg: '蓄力一击(击倒)'},
+//	113: {msg: '点名小心'},
+	114: {msg: '蓄力一击(击倒)114'},
+	138: {msg: '蓄力一击(击倒)138'},
+
 	116: {msg: '甜甜圈'}
 };
 
@@ -36,15 +40,18 @@ module.exports = function BaharrGuide(d) {
 
 		hooks = [],
 
-		curLocation,
-		curAngle,
+		curLocation = null,
+		curAngle = null,
 
 		boss_CurLocation,
 		boss_CurAngle,
 
 		uid0 = 999999999,
 		uid1 = 899999999,
-		uid2 = 799999999;
+		uid2 = 799999999,
+
+		skillid = null,
+		shining = false;
 
 	d.command.add('baha', (arg) => {
 		if (!arg) {
@@ -100,11 +107,12 @@ module.exports = function BaharrGuide(d) {
 
 	function load() {
 		if (!hooks.length) {
-
 			hook('S_BOSS_GAGE_INFO', 3, sBossGageInfo);
 			hook('S_ACTION_STAGE', 8, sActionStage);
+			hook('S_ABNORMALITY_BEGIN', 3, sAbnormalityBegin);
 
 			function sBossGageInfo(event) {
+				if (!enabled) return;
 				if (!insidemap) return;
 
 				if (event.templateId === BossID)
@@ -114,38 +122,62 @@ module.exports = function BaharrGuide(d) {
 			}
 
 			function sActionStage(event) {
-				if (!enabled || !insidemap || whichboss===0 || event.stage>0) return;
-
+				if (!enabled) return;
+				if (!insidemap || whichboss===0 || event.stage>0) return;
 				if (event.templateId!==BossID) return;
 
-				let skillid = event.skill.id % 1000;
+				skillid = event.skill.id % 1000;
+				
 				boss_CurLocation = event.loc;
 				boss_CurAngle = event.w;
 				
 				curLocation = boss_CurLocation;
 				curAngle = boss_CurAngle;
 
-				if (BossActions[skillid]) {
-
-					if (skillid === 116) {
-						Spawnitem2(581, 10, 290, 8000);
-					}
-
-					if (skillid === 121 || skillid === 140) {
-						SpawnThing(90, 50, 5000);
-						Spawnitem1(581, 180, 500, 5000);
-						Spawnitem1(581, 0, 500, 5000);
-
-						SpawnThing(270, 100, 5000);
-						Spawnitem1(581, 180, 500, 5000);
-						Spawnitem1(581, 0, 500, 5000);
-					}
-
-					sendMessage(BossActions[skillid].msg);
+				if (skillid==104) {
+					setTimeout(function() { 
+						if (shining) sendMessage('发光后砸104' + ' | ' + event.stage);
+					}, 1800)
+				}
+				if (skillid==118) {
+					setTimeout(function() { 
+						if (shining) sendMessage('发光后砸118' + ' | ' + event.stage);
+					}, 2200)
+				}
+				if (skillid==134) {
+					setTimeout(function() { 
+						if (shining) sendMessage('发光后砸134' + ' | ' + event.stage);
+					}, 1400)
 				}
 
+				if (BossActions[skillid]) {
+					switch (skillid) {
+						case 116:
+							Spawnitem2(581, 10, 290, 6000);
+							break;
+						case 121:
+						case 140:
+							SpawnThing(90, 50, 1000);
+							Spawnitem1(581, 180, 500, 6000);
+							Spawnitem1(581, 0, 500, 6000);
+
+							SpawnThing(270, 100, 1000);
+							Spawnitem1(581, 180, 500, 6000);
+							Spawnitem1(581, 0, 500, 6000);
+							break;
+						default :
+							
+							break;
+					}
+					sendMessage(BossActions[skillid].msg);
+				}
 			}
 
+			function sAbnormalityBegin(event) {
+				if (!enabled) return;
+				if (event.id==90442000) shining = true;
+				if (event.id==90442001) shining = false;
+			}
 		}
 	}
 

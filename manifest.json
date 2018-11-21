@@ -1,12 +1,13 @@
 {
 	"files": {
 		"LICENSE": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
-		"README.md": "f7edf396f21ccb65bab4b22049d523a34e5143e442d5583039036ff6bfc1ba5e",
-		"index.js": "39193850767fb8084694bc10e77de42138979cb60541aeef12cc638a87c22565",
+		"README.md": "af671b7b235ee8c50ebd5f1067513da95ed4e2086821b9589133343abb90ecd3",
+		"index.js": "0bf6bde42afc6fe545ea05e27091dc7470b2a966198082d74a47b5b0d4f702df",
 		"module.json": "9d677f690dfa06e6a2985c6d82baf9f27437945ab56a4a32ebd59bc471ccea02"
 	},
 	"defs": {
 		"C_CHAT": 1,
+		"S_ABNORMALITY_BEGIN": 3,
 		"S_ACTION_STAGE": 8,
 		"S_BOSS_GAGE_INFO": 3,
 		"S_CHAT": 2,
