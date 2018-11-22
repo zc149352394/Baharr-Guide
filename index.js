@@ -167,9 +167,10 @@ module.exports = function BaharrGuide(d) {
 							Spawnitem1(581, 0, 500, 6000);
 							break;
 						default :
-							sendMessage(BossActions[skillid].msg);
+							
 							break;
 					}
+					sendMessage(BossActions[skillid].msg);
 				}
 			}
 
