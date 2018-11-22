@@ -23,7 +23,8 @@ const BossActions = {
 	140: {msg: '右脚(4连火焰)'},
 
 //	113: {msg: '点名小心'},
-	114: {msg: '蓄力一击(击倒)114'},
+	114: {msg: '捶地'},
+	115: {msg: '蓄力一击(击倒)115'},
 	138: {msg: '蓄力一击(击倒)138'},
 
 	116: {msg: '甜甜圈'}
@@ -123,7 +124,7 @@ module.exports = function BaharrGuide(d) {
 
 			function sActionStage(event) {
 				if (!enabled) return;
-				if (!insidemap || whichboss===0 || event.stage>0) return;
+				if (!insidemap || whichboss===0) return;
 				if (event.templateId!==BossID) return;
 
 				skillid = event.skill.id % 1000;
@@ -134,23 +135,23 @@ module.exports = function BaharrGuide(d) {
 				curLocation = boss_CurLocation;
 				curAngle = boss_CurAngle;
 
-				if (skillid==104) {
+				if (event.stage==1 && skillid==104) {
 					setTimeout(function() { 
-						if (shining) sendMessage('发光后砸104' + ' | ' + event.stage);
-					}, 1800)
+						if (shining) sendMessage('发光后砸104');
+					}, 1000)
 				}
-				if (skillid==118) {
+				if (event.stage==1 && skillid==118) {
 					setTimeout(function() { 
-						if (shining) sendMessage('发光后砸118' + ' | ' + event.stage);
-					}, 2200)
+						if (shining) sendMessage('发光后砸118');
+					}, 2000)
 				}
-				if (skillid==134) {
+				if (event.stage==0 && skillid==134) {
 					setTimeout(function() { 
-						if (shining) sendMessage('发光后砸134' + ' | ' + event.stage);
-					}, 1400)
+						if (shining) sendMessage('发光后砸134');
+					}, 1000)
 				}
 
-				if (BossActions[skillid]) {
+				if (event.stage==0 && BossActions[skillid]) {
 					switch (skillid) {
 						case 116:
 							Spawnitem2(581, 10, 290, 6000);
