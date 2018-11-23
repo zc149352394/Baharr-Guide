@@ -153,21 +153,35 @@ module.exports = function BaharrGuide(d) {
 
 				if (event.stage==0 && BossActions[skillid]) {
 					switch (skillid) {
-						case 116:
-							Spawnitem2(581, 10, 290, 6000);
+						case 103:	// 前砸
+							SpawnThing(184, 400, 100);
+							Spawnitem2(581, 6, 350, 3000);
 							break;
-						case 121:
-						case 140:
-							SpawnThing(90, 50, 1000);
+						case 131:	// 左前砸+后拉
+							SpawnThing(182, 340, 100);
+							Spawnitem2(581, 4, 660, 4000);
+							break;
+						case 114:	// 捶地
+							SpawnThing(184, 260, 100);
+							Spawnitem2(581, 10, 320, 4000);
+							break;
+						case 116:	// 点名后甜甜圈
+							Spawnitem2(581, 8, 290, 6000);
+							break;
+
+						case 121:	// 左脚→(4连火焰)
+						case 140:	// 右脚←(4连火焰)
+							SpawnThing(90, 50, 100);
 							Spawnitem1(581, 180, 500, 6000);
 							Spawnitem1(581, 0, 500, 6000);
 
-							SpawnThing(270, 100, 1000);
+							SpawnThing(270, 100, 100);
 							Spawnitem1(581, 180, 500, 6000);
 							Spawnitem1(581, 0, 500, 6000);
 							break;
+
 						default :
-							
+
 							break;
 					}
 					sendMessage(BossActions[skillid].msg);
