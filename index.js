@@ -3,7 +3,8 @@ const Vec3 = require('tera-vec3');
 const config = require('./config.json');
 
 const mapID = 9044;
-const BossID = 1000;
+const BossID1 = 1000;
+const BossID2 = 2000;
 const BossActions = {
 //第一阶段//////////////////////////////////////////
 	103: {msg: '前砸(闪避)'},
@@ -116,7 +117,7 @@ module.exports = function BaharrGuide(d) {
 				if (!enabled) return;
 				if (!insidemap) return;
 
-				if (event.templateId === BossID)
+				if (event.templateId === BossID1 || event.templateId === BossID2)
 					whichboss = 1;
 				else
 					whichboss = 0;
@@ -125,7 +126,7 @@ module.exports = function BaharrGuide(d) {
 			function sActionStage(event) {
 				if (!enabled) return;
 				if (!insidemap || whichboss===0) return;
-				if (event.templateId!==BossID) return;
+				if (event.templateId!==BossID1 && event.templateId!==BossID2) return;
 
 				skillid = event.skill.id % 1000;
 				
