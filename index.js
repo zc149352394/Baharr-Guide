@@ -4,7 +4,7 @@ const config = require('./config.json');
 
 const mapID = 9044;
 const BossID = [1000, 2000];
-const BossActions = require('./skills');
+const {BossActions} = require('./skills');
 
 module.exports = function BaharrGuide(d) {
 	let	enabled = config.enabled,
