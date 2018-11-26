@@ -3,32 +3,8 @@ const Vec3 = require('tera-vec3');
 const config = require('./config.json');
 
 const mapID = 9044;
-const BossID = 1000;
-const BossActions = {
-//第一阶段//////////////////////////////////////////
-	103: {msg: '前砸(闪避)'},
-
-	117: {msg: '跳劈(击倒)117'},
-	118: {msg: '跳劈(击倒)118'},
-
-	108: {msg: '丢锤(晕眩)'},
-
-	111: {msg0: '后砸(慢)'},
-//	137: {msg: '后砸'},
-
-	131: {msg: '前砸 -> 后推'},
-	139: {msg: '转圈(全屏击倒)'},
-
-	121: {msg: '左脚(4连火焰)'},
-	140: {msg: '右脚(4连火焰)'},
-
-//	113: {msg: '点名小心'},
-	114: {msg: '捶地'},
-	115: {msg: '蓄力一击(击倒)115'},
-	138: {msg: '蓄力一击(击倒)138'},
-
-	116: {msg: '甜甜圈'}
-};
+const BossID = [1000, 2000];
+const BossActions = require('./skills');
 
 module.exports = function BaharrGuide(d) {
 	let	enabled = config.enabled,
@@ -49,10 +25,7 @@ module.exports = function BaharrGuide(d) {
 
 		uid0 = 999999999,
 		uid1 = 899999999,
-		uid2 = 799999999,
-
-		skillid = null,
-		shining = false;
+		uid2 = 799999999;
 
 	d.command.add('baha', (arg) => {
 		if (!arg) {
@@ -99,7 +72,7 @@ module.exports = function BaharrGuide(d) {
 	function sLoadTopo(event) {
 		if (event.zone === mapID) {
 			insidemap = true;
-			d.command.message('进入副本: ' + '火神殿 '.clr('56B4E9'));
+			d.command.message('进入副本: ' + '火神殿'.clr('56B4E9'));
 			load();
 		} else {
 			unload();
@@ -116,51 +89,38 @@ module.exports = function BaharrGuide(d) {
 				if (!enabled) return;
 				if (!insidemap) return;
 
-				if (event.templateId === BossID)
+				let bosshp = (event.curHp / event.maxHp);
+
+				if (bosshp <= 0) {
+					whichboss = 0;
+				}
+
+				if (bosshp === 1) {
+					shining = false;
+				}
+
+				if (event.templateId === BossID[0])
 					whichboss = 1;
+				else if (event.templateId === BossID[1])
+					whichboss = 2;
 				else
 					whichboss = 0;
 			}
 
 			function sActionStage(event) {
-				if (!enabled) return;
-				if (!insidemap || whichboss===0) return;
-				if (event.templateId!==BossID) return;
+				if (!enabled || !insidemap || whichboss===0) return;
+				if (event.templateId!=BossID[0] && event.templateId!=BossID[1]) return;
 
-				skillid = event.skill.id % 1000;
-				
+				let skillid = event.skill.id % 1000;
+
 				boss_CurLocation = event.loc;
 				boss_CurAngle = event.w;
-				
+
 				curLocation = boss_CurLocation;
 				curAngle = boss_CurAngle;
 
-				if (event.stage==1 && skillid==104) {
-					setTimeout(function() { 
-						if (shining) sendMessage('发光后砸104');
-					}, 1000)
-				}
-				if (event.stage==1 && skillid==118) {
-					setTimeout(function() { 
-						if (shining) sendMessage('发光后砸118');
-					}, 2000)
-				}
-				if (event.stage==0 && skillid==134) {
-					setTimeout(function() { 
-						if (shining) sendMessage('发光后砸134');
-					}, 1000)
-				}
-
-				if (event.stage==0 && BossActions[skillid]) {
+				if (event.stage==0 && BossActions[skillid].msg) {
 					switch (skillid) {
-						case 103:	// 前砸
-							SpawnThing(184, 400, 100);
-							Spawnitem2(581, 6, 350, 3000);
-							break;
-						case 131:	// 左前砸+后拉
-							SpawnThing(182, 340, 100);
-							Spawnitem2(581, 4, 660, 4000);
-							break;
 						case 114:	// 捶地
 							SpawnThing(184, 260, 100);
 							Spawnitem2(581, 10, 320, 4000);
@@ -168,20 +128,16 @@ module.exports = function BaharrGuide(d) {
 						case 116:	// 点名后甜甜圈
 							Spawnitem2(581, 8, 290, 6000);
 							break;
-
 						case 121:	// 左脚→(4连火焰)
 						case 140:	// 右脚←(4连火焰)
-							SpawnThing(90, 50, 100);
+							SpawnThing(90, 50, 6000);
 							Spawnitem1(581, 180, 500, 6000);
 							Spawnitem1(581, 0, 500, 6000);
-
-							SpawnThing(270, 100, 100);
+							SpawnThing(270, 100, 6000);
 							Spawnitem1(581, 180, 500, 6000);
 							Spawnitem1(581, 0, 500, 6000);
 							break;
-
 						default :
-
 							break;
 					}
 					sendMessage(BossActions[skillid].msg);
@@ -189,9 +145,15 @@ module.exports = function BaharrGuide(d) {
 			}
 
 			function sAbnormalityBegin(event) {
-				if (!enabled) return;
-				if (event.id==90442000) shining = true;
-				if (event.id==90442001) shining = false;
+				if (!enabled || !insidemap || whichboss===0) return;
+
+				if (event.id==90442000) {
+					sendMessage('锤头发光 小心后砸!!');
+				}
+
+				if (event.id==90442001) {
+					sendMessage('锤头不发光');
+				}
 			}
 		}
 	}
@@ -319,5 +281,4 @@ module.exports = function BaharrGuide(d) {
 			Spawnitem(item, degrees, radius, times);
 		}
 	}
-
 }

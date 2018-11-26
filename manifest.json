@@ -1,9 +1,17 @@
 {
 	"files": {
 		"LICENSE": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
-		"README.md": "99dea4a38b5dc2bb1656a9733aea19a032ba4bb6cb430b28234b945e549eea25",
-		"index.js": "f52749d2404972ee80139fee97f8bd408cad18a5a6576b72c2fd2915e7dcfec2",
-		"module.json": "9d677f690dfa06e6a2985c6d82baf9f27437945ab56a4a32ebd59bc471ccea02"
+		"README.md": "ea4f88c5101b61baf244f5a0d60dfc5c2de7fcfc7aedc7ff0b657eafa8d4a838",
+		"config.json": {
+			"overwrite": false,
+			"hash": "699f7c4dcbb573b4faa936d385e1863c0e3da18b68f1c1cadb152d269132627f"
+		},
+		"index.js": "2911321befcd90cf6a2bacc7fa0ddf6f4621d04f0823ba317e85e35ab1a5ec82",
+		"module.json": "9d677f690dfa06e6a2985c6d82baf9f27437945ab56a4a32ebd59bc471ccea02",
+		"skills.js": {
+			"overwrite": false,
+			"hash": "a8990944a2796db06de0b8d380b638c33e89b9afb6f06b074275d1fe4f15e57b"
+		}
 	},
 	"defs": {
 		"C_CHAT": 1,
