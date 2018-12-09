@@ -1,25 +1,30 @@
 {
 	"files": {
-		"LICENSE": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+		"LICENSE": "0b383d5a63da644f628d99c33976ea6487ed89aaa59f0b3257992deac1171e6b",
 		"README.md": "06369442630e81864546198cfd79273bd70b487794818d1612652b71bc1234df",
-		"config.json": {
-			"overwrite": false,
-			"hash": "e49d999ef015da3faa2c4e476ebe61b4b320c9ec1e086240aae2e0c4d0d4c671"
-		},
-		"index.js": "f01c7684338667a0b86f33d7ffb1df15933344e6b82a8824e1c0bb0c060c69b9",
+		"abnormalityList.js": "7a65fa8e33d7b2646541a8fb0c435365477039892e2ef0de82cad37644ff9404",
+		"config.json": "d74c81f6ea1afb519a5f680296048c296ace7994751869f397691c4e7fe66419",
+		"hotdot/hotdot-TW.tsv": "55c5ac8234205e47e4529ade64bac90a01e0ff50ed710c83609bd3f919018476",
+		"index.js": "b7a8351dcf342b0f0e5b7064cca165ac7b66b8bb2dce1c8b299a0f22b9824436",
 		"module.json": "9d677f690dfa06e6a2985c6d82baf9f27437945ab56a4a32ebd59bc471ccea02",
-		"skills.js": {
-			"overwrite": false,
-			"9fb5e43356decf1ea08f52320303619857ccf09f0d0116ecf3fccaf5ae992cf1"
-		}
+		"skillsList.js": "fcb31014f360c17919913260b345bd163c644fab9279d18623e7b08f3e0bcde3",
+		"skillsjson/444_cn.json": "d80bad85759ebbd8ecb5045395f32d43418c55f2b60bb959e7b3b2ba11fd3d53",
+		"skillsjson/444_default.json": "5ec6281c9844d1019bd8b9d457d73686a9d8650218a1f05c0216dcaca7320bf5"
 	},
 	"defs": {
+		"S_ABNORMALITY_BEGIN": 3,
 		"S_ACTION_STAGE": 8,
 		"S_BOSS_GAGE_INFO": 3,
 		"S_CHAT": 2,
+		"S_DESPAWN_BUILD_OBJECT": 2,
+		"S_DESPAWN_COLLECTION": 2,
+		"S_DESPAWN_DROPITEM": 4,
 		"S_DUNGEON_EVENT_MESSAGE": 2,
 		"S_LOAD_TOPO": 3,
 		"S_LOGIN": 10,
-		"S_NPC_STATUS": 1
+		"S_NPC_STATUS": 1,
+		"S_SPAWN_BUILD_OBJECT": 2,
+		"S_SPAWN_COLLECTION": 4,
+		"S_SPAWN_DROPITEM": 6
 	}
 }

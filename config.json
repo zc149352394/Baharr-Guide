@@ -1,5 +1,6 @@
 {
 	"enabled": true,
 	"sendToAlert": true,
-	"sendToNotice": true
+	"sendToNotice": true,
+	"sendToMessage": true
 }
