@@ -104,9 +104,11 @@ module.exports = function Baharr(mod) {
 		if (event.zone === MapID) {
 			insidemap = true;
 			sendMessage('进入副本: ' + '火神殿 '.clr('56B4E9') + `${BossName[whichboss]}`.clr('FF0000'));
+			TEST1();
 		} else {
 			insidemap = false;
 			resetDungeon();
+			TEST2();
 		}
     }
 	
@@ -115,11 +117,11 @@ module.exports = function Baharr(mod) {
 		
 		if (event.stage > 0) return;
 		
-		if (event.templateId == 2201) {
+		/* if (event.templateId == 2201) {
 			if (event.skill.id == 1205) {
 				setTimeout(() => { noticeMessage('|| 小怪已苏醒 ||'.clr('FF0000')) }, 30000);
 			}
-		}
+		} */
 		
 		if (event.templateId == 2500) {
 			curLocation = event.loc;
@@ -219,7 +221,7 @@ module.exports = function Baharr(mod) {
 	}
 	
 	function sAbnormalityBegin(event) {
-		if (event.target.low != bossIdLow) return;
+		if (event.target != bossIdLow) return;
 
 /* 		if ((event.id<90440000) || (event.id>90450000)) return;
 		if (abnormalityList[event.id]) {
@@ -246,11 +248,11 @@ module.exports = function Baharr(mod) {
 	function sBossGageInfo(event) {
 		if (!enabled || !insidemap) return;
 		
-		bossIdLow = event.id.low;
+		bossIdLow = event.id;
 		bosshp = (event.curHp / event.maxHp);
 		
-		if (bosshp <= 0.3 && temp) TEST1();
-		if (bosshp == 1) resetDungeon();
+		// if (bosshp <= 0.3 && temp) TEST1();
+		// if (bosshp == 1) resetDungeon();
 		
 		if (event.templateId === TemplateID[0])
 			whichboss = 1;
@@ -261,7 +263,7 @@ module.exports = function Baharr(mod) {
 	}
 	
 	function sNpcStatus(event) {
-		if (event.creature.low !== bossIdLow) return;
+		if (event.creature !== bossIdLow) return;
 		// console.log('sNpcStatus:');
 		// console.log(event);
 		if (event.enraged === 1) bossEnraged = true;
@@ -271,8 +273,6 @@ module.exports = function Baharr(mod) {
 	function resetDungeon() {
 		whichboss = 0;
 		bossEnraged = false;
-		
-		TEST2();
 	}
 	
 	function alertMessage(msg) {
