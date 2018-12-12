@@ -2,14 +2,20 @@
 	"files": {
 		"LICENSE": "0b383d5a63da644f628d99c33976ea6487ed89aaa59f0b3257992deac1171e6b",
 		"README.md": "06369442630e81864546198cfd79273bd70b487794818d1612652b71bc1234df",
-		"abnormalityList.js": "7a65fa8e33d7b2646541a8fb0c435365477039892e2ef0de82cad37644ff9404",
-		"config.json": "d74c81f6ea1afb519a5f680296048c296ace7994751869f397691c4e7fe66419",
-		"hotdot/hotdot-TW.tsv": "55c5ac8234205e47e4529ade64bac90a01e0ff50ed710c83609bd3f919018476",
-		"index.js": "25b1275e073474bc678d448230ee4faa27bc71c36d4f61c05ab95b83c986e9de",
+		"abnormalityList.js": {
+			"overwrite": false,
+			"hash": "7a65fa8e33d7b2646541a8fb0c435365477039892e2ef0de82cad37644ff9404"
+		},
+		"config.json": {
+			"overwrite": false,
+			"hash": "d74c81f6ea1afb519a5f680296048c296ace7994751869f397691c4e7fe66419"
+		},
+		"index.js": "1d0b6beac389050a39447e61fae872ce67e234340bf9c936e0bd9e7a430b7a1b",
 		"module.json": "9d677f690dfa06e6a2985c6d82baf9f27437945ab56a4a32ebd59bc471ccea02",
-		"skillsList.js": "fcb31014f360c17919913260b345bd163c644fab9279d18623e7b08f3e0bcde3",
-		"skillsjson/444_cn.json": "d80bad85759ebbd8ecb5045395f32d43418c55f2b60bb959e7b3b2ba11fd3d53",
-		"skillsjson/444_default.json": "5ec6281c9844d1019bd8b9d457d73686a9d8650218a1f05c0216dcaca7320bf5"
+		"skillsList.js": {
+			"overwrite": false,
+			"hash": "fcb31014f360c17919913260b345bd163c644fab9279d18623e7b08f3e0bcde3"
+		}
 	},
 	"defs": {
 		"S_ABNORMALITY_BEGIN": 3,
