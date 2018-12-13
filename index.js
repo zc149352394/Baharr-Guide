@@ -134,7 +134,7 @@ module.exports = function Baharr(mod) {
 			} */
 			if (skill == 305) {
 				noticeMessage('红眼射线 (秒杀)');
-				Spawnitem1(579, 180, 3000, 6000);
+				Spawnitem1(912, 180, 3000, 6000);
 				return;
 			}
 		}
@@ -153,33 +153,33 @@ module.exports = function Baharr(mod) {
 			case 103:	// 前砸
 			case 125:	// 右前砸+后拉
 				SpawnThing(184, 400, 100);
-				Spawnitem2(581, 8, 350, 3000);
+				Spawnitem2(913, 8, 350, 3000);
 				break;
 				
 			case 131:	// 左前砸+后拉
 				SpawnThing(182, 340, 100);
-				Spawnitem2(581, 8, 660, 4000);
+				Spawnitem2(913, 8, 660, 4000);
 				break;
 				
 			case 112:	// 完美格挡
 			case 135:
 				SpawnThing(184, 220, 100);
-				Spawnitem2(581, 12, 210, 4000);
+				Spawnitem2(913, 12, 210, 4000);
 				break;
 				
 			case 114:	// 捶地
 				SpawnThing(184, 260, 100);
-				Spawnitem2(581, 10, 320, 4000);
+				Spawnitem2(913, 10, 320, 4000);
 				break;
 				
 			case 116:	// 点名后甜甜圈
-				Spawnitem2(581, 8, 290, 6000);
+				Spawnitem2(913, 8, 290, 6000);
 				break;
 				
 			case 111:	// 后砸 (慢慢慢慢)
 			case 137:	// 后砸
 				SpawnThing(0, 500, 100);
-				Spawnitem2(581, 8, 480, 2000);
+				Spawnitem2(913, 8, 480, 2000);
 				break;
 				
 			case 121:	// 左脚→(4连火焰)
@@ -189,25 +189,25 @@ module.exports = function Baharr(mod) {
 			case 141:
 			case 142:
 				SpawnThing(90, 45, 100);
-				Spawnitem1(581, 180, 500, 6000);
-				Spawnitem1(581, 0, 500, 6000);
+				Spawnitem1(913, 180, 500, 6000);
+				Spawnitem1(913, 0, 500, 6000);
 				
 				SpawnThing(270, 95, 100);
-				Spawnitem1(581, 180, 500, 6000);
-				Spawnitem1(581, 0, 500, 6000);
+				Spawnitem1(913, 180, 500, 6000);
+				Spawnitem1(913, 0, 500, 6000);
 				
 				setTimeout(() => { noticeMessage('|| 四连半月 已就绪 ||'.clr('FF0000')) }, 60000);
 				break;
 				
 			case 101:	// 锤地(三连击)
-				Spawnitem1(581, 345, 500, 4000);	// 对称轴 尾部
-				Spawnitem1(581, 270, 500, 3000);	// 对称轴 左侧
+				Spawnitem1(913, 345, 500, 4000);	// 对称轴 尾部
+				Spawnitem1(913, 270, 500, 3000);	// 对称轴 左侧
 				break;
 				
 			case 311:	// 右手放锤
 			case 312:	// 左右放锤
-				Spawnitem1(581, 180, 500, 6000);	// 对称轴 头部
-				Spawnitem1(581, 0, 500, 6000);		// 对称轴 尾部
+				Spawnitem1(913, 180, 500, 6000);	// 对称轴 头部
+				Spawnitem1(913, 0, 500, 6000);		// 对称轴 尾部
 				break;
 				
 			case 119:	// 光柱+告示牌
@@ -242,7 +242,7 @@ module.exports = function Baharr(mod) {
 		
 		if (event.id == 90444001 && skillid == 104) setTimeout(() => { if (shining) noticeMessage('发光后砸') } , 500);
 		if (event.id == 90442000 && skillid == 134) setTimeout(() => { if (shining) noticeMessage('发光后砸') } , 300);
-		if (event.id == 90444001 && skillid == 118) setTimeout(() => { if (shining) noticeMessage('主仇->跳劈 | 发光后砸') } , 400);
+		if (event.id == 90444001 && skillid == 118) setTimeout(() => { if (shining) noticeMessage('主仇->跳劈 | 发光后砸') } , 300);
 	}
 	
 	function sBossGageInfo(event) {
@@ -400,7 +400,7 @@ module.exports = function Baharr(mod) {
 	}
 	
 	function Spawnitem1(item, degrees, maxRadius, times) {
-		for (var radius=25; radius<=maxRadius; radius+=50) {
+		for (var radius=50; radius<=maxRadius; radius+=50) {
 			Spawnitem(item, degrees, radius, times);
 		}
 	}
