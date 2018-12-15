@@ -82,10 +82,10 @@ module.exports = function Baharr(mod) {
 		}
 	});
 	
-	mod.hook('S_LOGIN', 10, sLogin);
+	mod.hook('S_LOGIN', 12, sLogin);
 	mod.hook('S_LOAD_TOPO', 3, sLoadTopo);
 	
-	mod.hook('S_ACTION_STAGE', 8, sActionStage);
+	mod.hook('S_ACTION_STAGE', 9, sActionStage);
 	mod.hook('S_ABNORMALITY_BEGIN', 3, sAbnormalityBegin);
 	
 	mod.hook('S_BOSS_GAGE_INFO', 3, sBossGageInfo);
