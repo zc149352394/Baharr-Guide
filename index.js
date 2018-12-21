@@ -1,19 +1,16 @@
-String.prototype.clr = function (hexColor) { return `<font color="#${hexColor}">${this}</font>` };
 const Vec3 = require('tera-vec3');
-const config = require('./config.json');
-const {BossActionsTips} = require('./skillsList');
-//const {abnormalityList} = require('./abnormalityList');
 
-const TemplateID = [1000, 2000];
 const MapID = 9044;
 const ZoneID = 444;
+const TemplateID = [1000, 2000];
 const BossName = ['封印之门', '一阶', '二阶'];
+const {BossActionsTips} = require('./skillsList');
 
-module.exports = function Baharr(mod) {
-	var	enabled = config.enabled,
-		sendToAlert = config.sendToAlert,
-		sendToNotice = config.sendToNotice,
-		sendToMessage = config.sendToMessage,
+module.exports = function BaharrGuide(mod) {
+	var	enabled = true,
+		sendToAlert = true,
+		sendToNotice = true,
+		sendToMessage = true,
 		
 		isTank = false,
 		insidemap = false,
@@ -38,7 +35,7 @@ module.exports = function Baharr(mod) {
 		uid1 = 899999999,
 		uid2 = 799999999;
 		
-	mod.command.add('baha', (arg) => {
+	mod.command.add(['巴哈', 'baha'], (arg) => {
 		if (!arg) {
 			enabled = !enabled;
 			sendMessage('辅助提示 ' + (enabled ? '启用'.clr('56B4E9') : '禁用'.clr('E69F00')));
@@ -46,16 +43,19 @@ module.exports = function Baharr(mod) {
 			switch (arg) {
 				case "a":
 				case "alert":
+				case "警告":
 					sendToAlert = !sendToAlert;
 					sendMessage('警告通知 ' + (sendToAlert ? '启用'.clr('56B4E9') : '禁用'.clr('E69F00')));
 					break;
 				case "n":
 				case "notice":
+				case "队长":
 					sendToNotice = !sendToNotice;
 					sendMessage('队长通知 ' + (sendToNotice ? '启用'.clr('56B4E9') : '禁用'.clr('E69F00')));
 					break;
 				case "p":
 				case "proxy":
+				case "代理":
 					sendToMessage = !sendToMessage;
 					sendMessage('代理通知 ' + (sendToMessage ? '启用'.clr('56B4E9') : '禁用'.clr('E69F00')));
 					break;
@@ -153,33 +153,33 @@ module.exports = function Baharr(mod) {
 			case 103:	// 前砸
 			case 125:	// 右前砸+后拉
 				SpawnThing(184, 400, 100);
-				Spawnitem2(913, 8, 350, 3000);
+				Spawnitem2(413, 8, 350, 3000);
 				break;
 				
 			case 131:	// 左前砸+后拉
 				SpawnThing(182, 340, 100);
-				Spawnitem2(913, 8, 660, 4000);
+				Spawnitem2(413, 8, 660, 4000);
 				break;
 				
 			case 112:	// 完美格挡
 			case 135:
 				SpawnThing(184, 220, 100);
-				Spawnitem2(913, 12, 210, 4000);
+				Spawnitem2(413, 12, 210, 4000);
 				break;
 				
 			case 114:	// 捶地
 				SpawnThing(184, 260, 100);
-				Spawnitem2(913, 10, 320, 4000);
+				Spawnitem2(413, 10, 320, 4000);
 				break;
 				
 			case 116:	// 点名后甜甜圈
-				Spawnitem2(913, 8, 290, 6000);
+				Spawnitem2(413, 8, 290, 6000);
 				break;
 				
 			case 111:	// 后砸 (慢慢慢慢)
 			case 137:	// 后砸
 				SpawnThing(0, 500, 100);
-				Spawnitem2(913, 8, 480, 2000);
+				Spawnitem2(413, 8, 480, 2000);
 				break;
 				
 			case 121:	// 左脚→(4连火焰)
@@ -189,25 +189,25 @@ module.exports = function Baharr(mod) {
 			case 141:
 			case 142:
 				SpawnThing(90, 45, 100);
-				Spawnitem1(913, 180, 500, 6000);
-				Spawnitem1(913, 0, 500, 6000);
+				Spawnitem1(413, 180, 500, 6000);
+				Spawnitem1(413, 0, 500, 6000);
 				
 				SpawnThing(270, 95, 100);
-				Spawnitem1(913, 180, 500, 6000);
-				Spawnitem1(913, 0, 500, 6000);
+				Spawnitem1(413, 180, 500, 6000);
+				Spawnitem1(413, 0, 500, 6000);
 				
-				setTimeout(() => { noticeMessage('|| 四连半月 已就绪 ||'.clr('FF0000')) }, 60000);
+				setTimeout(() => { noticeMessage('四连半月 已就绪'.clr('FF0000')) }, 60000);
 				break;
 				
 			case 101:	// 锤地(三连击)
-				Spawnitem1(913, 345, 500, 4000);	// 对称轴 尾部
-				Spawnitem1(913, 270, 500, 3000);	// 对称轴 左侧
+				Spawnitem1(413, 345, 500, 4000);	// 对称轴 尾部
+				Spawnitem1(413, 270, 500, 3000);	// 对称轴 左侧
 				break;
 				
 			case 311:	// 右手放锤
 			case 312:	// 左右放锤
-				Spawnitem1(913, 180, 500, 6000);	// 对称轴 头部
-				Spawnitem1(913, 0, 500, 6000);		// 对称轴 尾部
+				Spawnitem1(413, 180, 500, 6000);	// 对称轴 头部
+				Spawnitem1(413, 0, 500, 6000);		// 对称轴 尾部
 				break;
 				
 			case 119:	// 光柱+告示牌
@@ -222,18 +222,6 @@ module.exports = function Baharr(mod) {
 	
 	function sAbnormalityBegin(event) {
 		if (event.target.low != bossIdLow) return;
-
-/* 		if ((event.id<90440000) || (event.id>90450000)) return;
-		if (abnormalityList[event.id]) {
-			if (sendToMessage) sendMessage(abnormalityList[event.id].msg1);
-			if (sendToMessage) sendMessage(abnormalityList[event.id].msg2);
-			
-			alertMessage(abnormalityList[event.id].msg2);
-		}
-		else {
-			sendMessage('未知buff: ' + event.id);
-			alertMessage('未知buff: ' + event.id);
-		} */
 		
 		if (event.id == 90442304) noticeMessage('以 [暈眩技能] 阻止 震怒的暴風 施展');
 		
@@ -248,10 +236,9 @@ module.exports = function Baharr(mod) {
 	function sBossGageInfo(event) {
 		if (!enabled || !insidemap) return;
 		
-		bossIdLow = event.id.low;
-		bosshp = (event.curHp / event.maxHp);
+		bossIdLow = event.id;
+		bosshp = (Number(event.curHp) / Number(event.maxHp));
 		
-		// if (bosshp <= 0.3 && temp) TEST1();
 		if (bosshp == 1) resetDungeon();
 		
 		if (event.templateId === TemplateID[0])
@@ -263,9 +250,8 @@ module.exports = function Baharr(mod) {
 	}
 	
 	function sNpcStatus(event) {
-		if (event.creature.low !== bossIdLow) return;
-		// console.log('sNpcStatus:');
-		// console.log(event);
+		if (event.creature !== bossIdLow) return;
+		
 		if (event.enraged === 1) bossEnraged = true;
 		if (event.enraged === 0) bossEnraged = false;
 	}
@@ -304,7 +290,7 @@ module.exports = function Baharr(mod) {
 	function TEST1() {
 		temp = false;
 		mod.send('S_SPAWN_BUILD_OBJECT', 2, {
-			gameId : 111111111,
+			gameId : 222222222,
 			itemId : 1,
 			loc : new Vec3(-114567, 115063, 4022),
 			w : 3,
@@ -317,7 +303,7 @@ module.exports = function Baharr(mod) {
 	function TEST2() {
 		temp = true;
 		mod.send('S_DESPAWN_BUILD_OBJECT', 2, {
-			gameId : 111111111,
+			gameId : 222222222,
 			unk : 0
 		});
 	}
@@ -411,4 +397,5 @@ module.exports = function Baharr(mod) {
 		}
 	}
 	
+	this.destructor = () => { mod.command.remove(['巴哈', 'baha']) }
 }

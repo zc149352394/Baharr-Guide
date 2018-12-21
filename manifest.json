@@ -1,21 +1,9 @@
 {
 	"files": {
-		"LICENSE": "0b383d5a63da644f628d99c33976ea6487ed89aaa59f0b3257992deac1171e6b",
-		"README.md": "06369442630e81864546198cfd79273bd70b487794818d1612652b71bc1234df",
-		"abnormalityList.js": {
-			"overwrite": false,
-			"hash": "7a65fa8e33d7b2646541a8fb0c435365477039892e2ef0de82cad37644ff9404"
-		},
-		"config.json": {
-			"overwrite": false,
-			"hash": "d74c81f6ea1afb519a5f680296048c296ace7994751869f397691c4e7fe66419"
-		},
-		"index.js": "1f5ce25ea9595ed45bd5575675743fd4ba3567917d38de74c9d61921ff253e7b",
-		"module.json": "9d677f690dfa06e6a2985c6d82baf9f27437945ab56a4a32ebd59bc471ccea02",
-		"skillsList.js": {
-			"overwrite": false,
-			"hash": "fcb31014f360c17919913260b345bd163c644fab9279d18623e7b08f3e0bcde3"
-		}
+		"README.md": "e9026c678fccb53e5639458eed36e9e0bf9bbb04725e77b70df08303c8e5725f",
+		"index.js": "c8be11fc9d3daf4257882eb4af74f0e86b5e34cc3cece26bd20ec005b0b24574",
+		"module.json": "1d9437b1b0f316ef2c86320a63fd305466d52750db54939915e939bb14cde4ad",
+		"skillsList.js.js": "f8f8de8144b93198b3cf96f41e2fb0a5b65a2bca64c9689f6d8d67346eab2642"
 	},
 	"defs": {
 		"S_ABNORMALITY_BEGIN": 3,
