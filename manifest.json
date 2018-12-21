@@ -3,7 +3,10 @@
 		"README.md": "e9026c678fccb53e5639458eed36e9e0bf9bbb04725e77b70df08303c8e5725f",
 		"index.js": "c8be11fc9d3daf4257882eb4af74f0e86b5e34cc3cece26bd20ec005b0b24574",
 		"module.json": "1d9437b1b0f316ef2c86320a63fd305466d52750db54939915e939bb14cde4ad",
-		"skillsList.js.js": "f8f8de8144b93198b3cf96f41e2fb0a5b65a2bca64c9689f6d8d67346eab2642"
+		"skillsList.js": {
+			"overwrite": false,
+			"hash": "f8f8de8144b93198b3cf96f41e2fb0a5b65a2bca64c9689f6d8d67346eab2642"
+		}
 	},
 	"defs": {
 		"S_ABNORMALITY_BEGIN": 3,
