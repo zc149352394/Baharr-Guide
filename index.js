@@ -1,3 +1,4 @@
+String.prototype.clr = function (hexColor) { return `<font color='#${hexColor}'>${this}</font>` };
 const Vec3 = require('tera-vec3');
 
 const MapID = 9044;
