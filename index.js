@@ -171,23 +171,23 @@ module.exports = function BaharrGuide(mod) {
 				switch (skillid) {
 					case 103:	// 前砸
 					case 125:	// 右前砸+后拉
-						SpawnThing(184, 400, 10);
+						SpawnThing(true, 184, 400, 100);
 						Spawnitem2(itemID, 8, 350, 3000);
 						break;
 						
 					case 131:	// 左前砸+后拉
-						SpawnThing(182, 340, 10);
+						SpawnThing(true, 182, 340, 100);
 						Spawnitem2(itemID, 8, 660, 4000);
 						break;
 						
 					case 112:	// 完美格挡
 					case 135:
-						SpawnThing(184, 220, 10);
+						SpawnThing(true, 184, 220, 100);
 						Spawnitem2(itemID, 12, 210, 4000);
 						break;
 						
 					case 114:	// 捶地
-						SpawnThing(184, 260, 10);
+						SpawnThing(true, 184, 260, 100);
 						Spawnitem2(itemID, 10, 320, 4000);
 						break;
 						
@@ -197,7 +197,7 @@ module.exports = function BaharrGuide(mod) {
 						
 					case 111:	// 后砸 (慢慢慢慢)
 					case 137:	// 后砸
-						SpawnThing(0, 500, 10);
+						SpawnThing(true, 0, 500, 100);
 						Spawnitem2(itemID, 8, 480, 2000);
 						break;
 						
@@ -207,11 +207,11 @@ module.exports = function BaharrGuide(mod) {
 					case 140:	// 右脚←(4连火焰)
 					case 141:
 					case 142:
-						SpawnThing(90, 50, 10);
+						SpawnThing(true, 90, 50, 100);
 						Spawnitem1(itemID, 180, 500, 6000);
 						Spawnitem1(itemID, 0, 500, 6000);
 						
-						SpawnThing(270, 100, 10);
+						SpawnThing(true, 270, 100, 100);
 						Spawnitem1(itemID, 180, 500, 6000);
 						Spawnitem1(itemID, 0, 500, 6000);
 						
@@ -237,10 +237,10 @@ module.exports = function BaharrGuide(mod) {
 						break;
 						
 					case 119:	// 光柱+告示牌
-						SpawnThing(270, 300, 2000);
+						SpawnThing(false, 270, 300, 2000);
 						break;
 					case 120:
-						SpawnThing(90, 300, 2000);
+						SpawnThing(false, 90, 300, 2000);
 						break;
 						
 					default :
@@ -319,7 +319,7 @@ module.exports = function BaharrGuide(mod) {
 		});
 	}
 	
-	function SpawnThing(degrees, radius, times) {
+	function SpawnThing(hide, degrees, radius, times) {
 		let r = null, rads = null, finalrad = null;
 		
 		r = curAngle - Math.PI;
@@ -338,7 +338,7 @@ module.exports = function BaharrGuide(mod) {
 			message : '安全区'
 		});
 		
-		// curLocation.z = curLocation.z - 1000;
+		if (hide) { curLocation.z = curLocation.z - 1000; }
 		mod.send('S_SPAWN_DROPITEM', 6, {
 			gameId: uid2,
 			item: 98260,
@@ -349,7 +349,7 @@ module.exports = function BaharrGuide(mod) {
 				id: 0
 			}]
 		});
-		// curLocation.z = curLocation.z + 1000;
+		if (hide) { curLocation.z = curLocation.z + 1000; }
 		
 		setTimeout(DespawnThing, times, uid1, uid2);
 		uid1--;
