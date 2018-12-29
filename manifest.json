@@ -1,11 +1,11 @@
 {
 	"files": {
 		"README.md": "e9026c678fccb53e5639458eed36e9e0bf9bbb04725e77b70df08303c8e5725f",
-		"index.js": "1b0fab7f52f6ae8ccc07406a5b7f81be3ad1002f743585b24b95125d2d5b742c",
+		"index.js": "1dca51abbad8314b59a2978906d1a7f81ed157ef9cb76b69bb6a0d28c9db9c97",
 		"module.json": "1d9437b1b0f316ef2c86320a63fd305466d52750db54939915e939bb14cde4ad",
 		"skillsList.js": {
 			"overwrite": false,
-			"hash": "f8f8de8144b93198b3cf96f41e2fb0a5b65a2bca64c9689f6d8d67346eab2642"
+			"hash": "16546c6dcd37abc9599917e9e291687f3b57b130732b661f9308a0543c394948"
 		}
 	},
 	"defs": {
