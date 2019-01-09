@@ -8,6 +8,7 @@ const {BossActionsTips} = require('./skillsList');
 const BossName = ['封印之门', '一阶', '二阶'];
 
 module.exports = function BaharrGuide(mod) {
+	
 	let	enabled = true,
 		sendToAlert = true,
 		sendToNotice = true,
@@ -39,26 +40,20 @@ module.exports = function BaharrGuide(mod) {
 		itemID = 445,
 		timeOut = 0;
 	
-	mod.command.add(['巴哈', 'baha'], (arg) => {
+	mod.command.add('巴哈', (arg) => {
 		if (!arg) {
 			enabled = !enabled;
 			sendMessage('辅助提示 ' + (enabled ? '启用'.clr('56B4E9') : '禁用'.clr('E69F00')));
 		} else {
 			switch (arg) {
-				case "a":
-				case "alert":
 				case "警告":
 					sendToAlert = !sendToAlert;
 					sendMessage('警告通知 ' + (sendToAlert ? '启用'.clr('56B4E9') : '禁用'.clr('E69F00')));
 					break;
-				case "n":
-				case "notice":
 				case "队长":
 					sendToNotice = !sendToNotice;
 					sendMessage('队长通知 ' + (sendToNotice ? '启用'.clr('56B4E9') : '禁用'.clr('E69F00')));
 					break;
-				case "p":
-				case "proxy":
 				case "代理":
 					sendToMessage = !sendToMessage;
 					sendMessage('代理通知 ' + (sendToMessage ? '启用'.clr('56B4E9') : '禁用'.clr('E69F00')));
@@ -86,7 +81,7 @@ module.exports = function BaharrGuide(mod) {
 		}
 	});
 	
-	mod.hook('S_LOGIN', 10, (event) => {
+	mod.hook('S_LOGIN', 12, (event) => {
 		let job = (event.templateId - 10101) % 100;
 		if (job === 1 || job === 10) {					// 0-双刀, 1-枪骑, 2-大剑, 3-斧头, 4-魔道
 			isTank = true;								// 5-弓箭, 6-祭司, 7-元素, 8-飞镰, 9-魔工
@@ -231,7 +226,7 @@ module.exports = function BaharrGuide(mod) {
 						break;
 						
 					case 311:	// 右手放锤
-					case 312:	// 左右放锤
+					case 312:	// 左手放锤
 						Spawnitem1(itemID, 180, 500, 6000);	// 对称轴 头部
 						Spawnitem1(itemID, 0, 500, 6000);	// 对称轴 尾部
 						break;
@@ -408,5 +403,4 @@ module.exports = function BaharrGuide(mod) {
 		}
 	}
 	
-	this.destructor = () => { mod.command.remove(['巴哈', 'baha']) }
 }
