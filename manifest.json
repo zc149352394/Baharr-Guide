@@ -1,8 +1,12 @@
 {
 	"files": {
-		"index.js": "bfe2973ee8301d6c7cae6eb4b43caaa111e271ce83c871c148d0a80b1467e6ce",
+		"config.json": {
+			"overwrite": false,
+			"hash": "6680d5354f69891a60a16f03e02e953139b9ad10734c001f237f48df885fc101"
+		},
+		"index.js": "c19d5e5c341fd6f807f12a564fd86bf5ec64a9f823ac3d3d308a4d473943d9c8",
 		"module.json": "9ef538636bd68d814a052aa0cc88b356142aa2e342eeb76e1114c234399fba6e",
-		"skillsList.js": "90f2596048687e82f78b6fb5ddbde207211505807424ee718c00844db6a840a9"
+		"skillsList.js": "8fdc527043fcf962a2d4d2a1e95db44bc6303a11100127b8609207aed90f4e10"
 	},
 	"defs": {
 		"S_ABNORMALITY_BEGIN": 3,

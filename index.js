@@ -1,20 +1,27 @@
 String.prototype.clr = function (hexColor) { return `<font color='#${hexColor}'>${this}</font>` };
 const Vec3 = require('tera-vec3');
 
-const MapID = 9044;
-const ZoneID = 444;
-const TemplateID = [1000, 2000];
+const MapID = 9044;					// https://github.com/neowutran/TeraDpsMeterData/tree/master/dungeons
+const ZoneID = 444;					// https://github.com/neowutran/TeraDpsMeterData/tree/master/monsters
+const TemplateID = [1000, 2000];	// 一阶王 二阶王
 const {BossActionsTips} = require('./skillsList');
-const BossName = ['封印之门', '一阶', '二阶'];
+const BossName = ["封印之门", "一阶", "二阶"];
 
 module.exports = function BaharrGuide(mod) {
 	
-	let	enabled = true,
-		sendToAlert = true,
-		sendToNotice = true,
-		sendToMessage = true,
-		
-		isTank = true,
+	let {
+		enabled,
+		sendToAlert,
+		sendToNotice,
+		sendToMessage,
+		itemsHelp,
+		itemID1,								// 告示牌: 1一般布告栏, 2兴高采烈布告栏, 3狂人布告栏
+		itemID2,								// 战利品: 古龍貝勒古斯的頭 (光柱), 369: 鑽石
+		itemID3,								// 采集物: 445艾普罗
+		itemID4									// 采集物: 912鸵鸟蛋
+	} = require('./config.json');
+	
+	let isTank = true,
 		insidemap = true,
 		checkBoss = true,
 		whichboss = 0,
@@ -37,10 +44,9 @@ module.exports = function BaharrGuide(mod) {
 		uid1 = 899999999n,
 		uid2 = 799999999n,
 		
-		itemID = 445,
 		timeOut = 0;
 	
-	mod.command.add('巴哈', (arg) => {
+	mod.command.add("巴哈", (arg) => {
 		if (!arg) {
 			enabled = !enabled;
 			sendMessage('辅助提示 ' + (enabled ? '启用'.clr('56B4E9') : '禁用'.clr('E69F00')));
@@ -57,6 +63,10 @@ module.exports = function BaharrGuide(mod) {
 				case "代理":
 					sendToMessage = !sendToMessage;
 					sendMessage('代理通知 ' + (sendToMessage ? '启用'.clr('56B4E9') : '禁用'.clr('E69F00')));
+					break;
+				case "地面":
+					itemsHelp = !itemsHelp;
+					sendMessage('地面提示 ' + (itemsHelp ? '启用'.clr('56B4E9') : '禁用'.clr('E69F00')));
 					break;
 				case "debug":
 					sendMessage('模块开关: ' + `${enabled}`.clr('00FFFF'));
@@ -92,9 +102,9 @@ module.exports = function BaharrGuide(mod) {
 	
 	mod.hook('S_LOAD_TOPO', 3, (event) => {
 		if (event.zone === MapID) {
-			sendMessage('进入副本: ' + '火神殿 '.clr('56B4E9') + `${BossName[whichboss]}`.clr('FF0000'));
 			insidemap = true;
 			checkBoss = true;
+			clearInterval(timeOut);
 			load();
 		} else {
 			insidemap = false;
@@ -102,9 +112,18 @@ module.exports = function BaharrGuide(mod) {
 			whichboss = 0;
 			shining = false;
 			clearInterval(timeOut);
+			TEST2();
 			unload();
 		}
     });
+	
+	mod.hook('S_SPAWN_ME', 3, (event) => {
+		if (!enabled || !insidemap || !checkBoss) return;
+		setTimeout(() => {
+			sendMessage('进入副本: ' + '火神殿 '.clr('56B4E9') + `${BossName[whichboss]}`.clr('FF0000'));
+			if (whichboss = 2) TEST1();
+		}, 3000);
+	});
 	
 	function load() {
 		if (!hooks.length) {
@@ -131,69 +150,88 @@ module.exports = function BaharrGuide(mod) {
 				
 				if (event.stage > 0) return;
 				
-				/* if (event.templateId == 2201) {
-					if (event.skill.id == 1205) {
-						setTimeout(() => { noticeMessage('|| 小怪已苏醒 ||'.clr('FF0000')) }, 30000);
-					}
-				} */
+				/* 文本通知提示 */
 				
 				if (event.templateId == 2500) {
 					curLocation = event.loc;
 					curAngle = event.w;
 					
 					skill = event.skill.id % 1000;
-					/* if (skill == 201) {
-						noticeMessage('红眼射线 (小心)');
+					if (skill == 201) {
+						alertMessage('红眼射线 (秒杀)');
 						return;
-					} */
+					}
 					if (skill == 305) {
 						noticeMessage('<font color="#FF0000">红眼射线 (秒杀)</font>');
-						Spawnitem1(912, 180, 3000, 6000);
+						if (itemsHelp) {
+							Spawnitem1(itemID4, 180, 3000, 6000);
+						}
 						return;
 					}
 				}
 				
 				if (!(TemplateID.includes(event.templateId))) return;
 				
+				skillid = event.skill.id % 1000;
+				
+				if (BossActionsTips[skillid]) {
+					noticeMessage(BossActionsTips[skillid].msg);
+				}
+				
+				/* 地面范围提示 */
+				
+				if (!itemsHelp) return;
+				
 				boss_CurLocation = event.loc;
 				boss_CurAngle = event.w;
 				curLocation = boss_CurLocation;
 				curAngle = boss_CurAngle;
-				skillid = event.skill.id % 1000;
-				
-				if (BossActionsTips[skillid]) { noticeMessage(BossActionsTips[skillid].msg); }
 				
 				switch (skillid) {
-					case 103:	// 前砸
-					case 125:	// 右前砸+后拉
+					case 103:	// 前砸 103 104
+					case 125:	// 右前砸 125 126 127
 						SpawnThing(true, 184, 400, 100);
-						Spawnitem2(itemID, 8, 350, 3000);
+						Spawnitem2(itemID4, 8, 350, 3000);
 						break;
 						
-					case 131:	// 左前砸+后拉
+					case 131:	// 左前砸 131 132 134
 						SpawnThing(true, 182, 340, 100);
-						Spawnitem2(itemID, 8, 660, 4000);
+						Spawnitem2(itemID4, 8, 660, 4000);
+						break;
+						
+					case 126:	// 右后拉 125 126 127
+					case 132:	// 左后拉 131 132 134
+						Spawnitem1(itemID4, 180, 500, 2000);	// 对称轴 头部
+						Spawnitem1(itemID4, 0, 500, 2000);		// 对称轴 尾部
+						if (skillid === 126) {
+							SpawnThing(true, 90, 100, 100);		// 右后拉
+						}
+						if (skillid === 132) {
+							SpawnThing(true, 180, 100, 100);	// 左后拉
+						}
+						Spawnitem1(itemID4, 180, 500, 2000);
+						Spawnitem1(itemID4, 0, 500, 2000);
 						break;
 						
 					case 112:	// 完美格挡
 					case 135:
 						SpawnThing(true, 184, 220, 100);
-						Spawnitem2(itemID, 12, 210, 4000);
+						Spawnitem2(itemID4, 12, 210, 4000);
 						break;
 						
 					case 114:	// 捶地
 						SpawnThing(true, 184, 260, 100);
-						Spawnitem2(itemID, 10, 320, 4000);
+						Spawnitem2(itemID4, 10, 320, 4000);
 						break;
 						
 					case 116:	// 点名后甜甜圈
-						Spawnitem2(itemID, 8, 290, 6000);
+						Spawnitem2(itemID4, 8, 290, 6000);
 						break;
 						
 					case 111:	// 后砸 (慢慢慢慢)
 					case 137:	// 后砸
 						SpawnThing(true, 0, 500, 100);
-						Spawnitem2(itemID, 8, 480, 2000);
+						Spawnitem2(itemID4, 8, 480, 2000);
 						break;
 						
 					case 121:	// 左脚→(4连火焰)
@@ -203,32 +241,33 @@ module.exports = function BaharrGuide(mod) {
 					case 141:
 					case 142:
 						SpawnThing(true, 90, 50, 100);
-						Spawnitem1(itemID, 180, 500, 6000);
-						Spawnitem1(itemID, 0, 500, 6000);
+						Spawnitem1(itemID4, 180, 500, 6000);
+						Spawnitem1(itemID4, 0, 500, 6000);
 						
 						SpawnThing(true, 270, 100, 100);
-						Spawnitem1(itemID, 180, 500, 6000);
-						Spawnitem1(itemID, 0, 500, 6000);
+						Spawnitem1(itemID4, 180, 500, 6000);
+						Spawnitem1(itemID4, 0, 500, 6000);
 						
 						timeOut = setTimeout(() => {
-							alertMessage('四连半月 已就绪')
 							mod.send('S_CHAT', 2, {
 								channel: 25,
 								authorName: '巴哈勒',
 								message: '四连半月 已就绪'
 							});
+							
+							alertMessage('四连半月 已就绪');
 						}, 60000);
 						break;
 						
 					case 101:	// 锤地(三连击)
-						Spawnitem1(itemID, 345, 500, 4000);	// 对称轴 尾部
-						Spawnitem1(itemID, 270, 500, 3000);	// 对称轴 左侧
+						Spawnitem1(itemID4, 345, 500, 4000);	// 对称轴 尾部
+						Spawnitem1(itemID4, 270, 500, 3000);	// 对称轴 左侧
 						break;
 						
 					case 311:	// 右手放锤
 					case 312:	// 左手放锤
-						Spawnitem1(itemID, 180, 500, 6000);	// 对称轴 头部
-						Spawnitem1(itemID, 0, 500, 6000);	// 对称轴 尾部
+						Spawnitem1(itemID4, 180, 500, 6000);	// 对称轴 头部
+						Spawnitem1(itemID4, 0, 500, 6000);		// 对称轴 尾部
 						break;
 						
 					case 119:	// 光柱+告示牌
@@ -251,9 +290,11 @@ module.exports = function BaharrGuide(mod) {
 				if (event.id == 90442000) shining = true;
 				if (event.id == 90442001) shining = false;
 				
-				if (event.id == 90444001 && skillid == 104) setTimeout(() => { if (shining) noticeMessage('发光后砸') } , 500);
-				if (event.id == 90442000 && skillid == 134) setTimeout(() => { if (shining) noticeMessage('发光后砸') } , 300);
-				if (event.id == 90444001 && skillid == 118) setTimeout(() => { if (shining) noticeMessage('发光后砸') } , 300);
+				/* 发光后砸 技能判定机制 不稳定(不准确) */
+				
+				if (event.id == 90444001 && skillid == 104) setTimeout(() => { if (shining) noticeMessage('发光后砸'); }, 500);
+				if (event.id == 90442000 && skillid == 134) setTimeout(() => { if (shining) noticeMessage('发光后砸'); }, 300);
+				if (event.id == 90444001 && skillid == 118) setTimeout(() => { if (shining) noticeMessage('发光后砸'); }, 300);
 			}
 		}
 	}
@@ -325,7 +366,7 @@ module.exports = function BaharrGuide(mod) {
 		
 		mod.send('S_SPAWN_BUILD_OBJECT', 2, {
 			gameId : uid1,
-			itemId : 1,
+			itemId : itemID1,
 			loc : curLocation,
 			w : r,
 			unk : 0,
@@ -336,7 +377,7 @@ module.exports = function BaharrGuide(mod) {
 		if (hide) { curLocation.z = curLocation.z - 1000; }
 		mod.send('S_SPAWN_DROPITEM', 6, {
 			gameId: uid2,
-			item: 98260,
+			item: itemID2,
 			loc: curLocation,
 			amount: 1,
 			expiry: 600000,
