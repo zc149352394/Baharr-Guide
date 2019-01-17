@@ -164,7 +164,7 @@ module.exports = function BaharrGuide(mod) {
 					if (skill == 305) {
 						noticeMessage('<font color="#FF0000">红眼射线 (秒杀)</font>');
 						if (itemsHelp) {
-							Spawnitem1(itemID4, 180, 3000, 6000);
+							Spawnitem1(itemID3, 180, 3000, 6000);
 						}
 						return;
 					}
@@ -204,10 +204,10 @@ module.exports = function BaharrGuide(mod) {
 						Spawnitem1(itemID4, 180, 500, 2000);	// 对称轴 头部
 						Spawnitem1(itemID4, 0, 500, 2000);		// 对称轴 尾部
 						if (skillid === 126) {
-							SpawnThing(true, 90, 100, 100);		// 右后拉
+							SpawnThing(true, 90, 200, 100);		// 右后拉
 						}
 						if (skillid === 132) {
-							SpawnThing(true, 180, 100, 100);	// 左后拉
+							SpawnThing(true, 270, 200, 100);	// 左后拉
 						}
 						Spawnitem1(itemID4, 180, 500, 2000);
 						Spawnitem1(itemID4, 0, 500, 2000);
