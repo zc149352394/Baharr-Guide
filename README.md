@@ -1,4 +1,4 @@
-# Baharr-Guide
+Baharr-Guide
 ======
 
 /8频道 键入命令 | 效果说明
