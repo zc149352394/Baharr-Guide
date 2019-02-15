@@ -7,7 +7,10 @@
 		},
 		"index.js": "27a16da18a40cfce77d1afbe25c0f0912e00f8c241e70b9abe94fa9963513dab",
 		"module.json": "894d3ba225ce45df637030c08aada45d67a492a42581d71020fab23561c37c1c",
-		"skillsList.js": "8fdc527043fcf962a2d4d2a1e95db44bc6303a11100127b8609207aed90f4e10"
+		"skillsList.js": {
+			"overwrite": false,
+			"hash": "8fdc527043fcf962a2d4d2a1e95db44bc6303a11100127b8609207aed90f4e10"
+		}
 	},
 	"defs": {
 		"S_ABNORMALITY_BEGIN": 3,
