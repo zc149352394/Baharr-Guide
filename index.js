@@ -128,7 +128,7 @@ module.exports = function BaharrGuide(mod) {
 	function load() {
 		if (!hooks.length) {
 			hook('S_BOSS_GAGE_INFO', 3, sBossGageInfo);
-			hook('S_ACTION_STAGE', 8, sActionStage);
+			hook('S_ACTION_STAGE', 9, sActionStage);
 			hook('S_ABNORMALITY_BEGIN', 3, sAbnormalityBegin);
 			
 			function sBossGageInfo(event) {
@@ -164,7 +164,7 @@ module.exports = function BaharrGuide(mod) {
 					if (skill == 305) {
 						noticeMessage('<font color="#FF0000">红眼射线 (秒杀)</font>');
 						if (itemsHelp) {
-							Spawnitem1(itemID3, 180, 3000, 6000);
+							Spawnitem1(itemID4, 180, 3000, 4000);
 						}
 						return;
 					}
@@ -191,47 +191,47 @@ module.exports = function BaharrGuide(mod) {
 					case 103:	// 前砸 103 104
 					case 125:	// 右前砸 125 126 127
 						SpawnThing(true, 184, 400, 100);
-						Spawnitem2(itemID4, 8, 350, 3000);
+						Spawnitem2(itemID3, 8, 350, 3000);
 						break;
 						
 					case 131:	// 左前砸 131 132 134
 						SpawnThing(true, 182, 340, 100);
-						Spawnitem2(itemID4, 8, 660, 4000);
+						Spawnitem2(itemID3, 8, 660, 4000);
 						break;
 						
 					case 126:	// 右后拉 125 126 127
 					case 132:	// 左后拉 131 132 134
-						Spawnitem1(itemID4, 180, 500, 2000);	// 对称轴 头部
-						Spawnitem1(itemID4, 0, 500, 2000);		// 对称轴 尾部
+						Spawnitem1(itemID3, 180, 500, 2000);	// 对称轴 头部
+						Spawnitem1(itemID3, 0, 500, 2000);		// 对称轴 尾部
 						if (skillid === 126) {
 							SpawnThing(true, 90, 200, 100);		// 右后拉
 						}
 						if (skillid === 132) {
 							SpawnThing(true, 270, 200, 100);	// 左后拉
 						}
-						Spawnitem1(itemID4, 180, 500, 2000);
-						Spawnitem1(itemID4, 0, 500, 2000);
+						Spawnitem1(itemID3, 180, 500, 2000);
+						Spawnitem1(itemID3, 0, 500, 2000);
 						break;
 						
 					case 112:	// 完美格挡
 					case 135:
 						SpawnThing(true, 184, 220, 100);
-						Spawnitem2(itemID4, 12, 210, 4000);
+						Spawnitem2(itemID3, 12, 210, 4000);
 						break;
 						
 					case 114:	// 捶地
 						SpawnThing(true, 184, 260, 100);
-						Spawnitem2(itemID4, 10, 320, 4000);
+						Spawnitem2(itemID3, 10, 320, 4000);
 						break;
 						
 					case 116:	// 点名后甜甜圈
-						Spawnitem2(itemID4, 8, 290, 6000);
+						Spawnitem2(itemID3, 8, 290, 6000);
 						break;
 						
 					case 111:	// 后砸 (慢慢慢慢)
 					case 137:	// 后砸
 						SpawnThing(true, 0, 500, 100);
-						Spawnitem2(itemID4, 8, 480, 2000);
+						Spawnitem2(itemID3, 8, 480, 2000);
 						break;
 						
 					case 121:	// 左脚→(4连火焰)
@@ -241,12 +241,12 @@ module.exports = function BaharrGuide(mod) {
 					case 141:
 					case 142:
 						SpawnThing(true, 90, 50, 100);
-						Spawnitem1(itemID4, 180, 500, 6000);
-						Spawnitem1(itemID4, 0, 500, 6000);
+						Spawnitem1(itemID3, 180, 500, 6000);
+						Spawnitem1(itemID3, 0, 500, 6000);
 						
 						SpawnThing(true, 270, 100, 100);
-						Spawnitem1(itemID4, 180, 500, 6000);
-						Spawnitem1(itemID4, 0, 500, 6000);
+						Spawnitem1(itemID3, 180, 500, 6000);
+						Spawnitem1(itemID3, 0, 500, 6000);
 						
 						timeOut = setTimeout(() => {
 							mod.send('S_CHAT', 2, {
@@ -260,14 +260,14 @@ module.exports = function BaharrGuide(mod) {
 						break;
 						
 					case 101:	// 锤地(三连击)
-						Spawnitem1(itemID4, 345, 500, 4000);	// 对称轴 尾部
-						Spawnitem1(itemID4, 270, 500, 3000);	// 对称轴 左侧
+						Spawnitem1(itemID3, 345, 500, 4000);	// 对称轴 尾部
+						Spawnitem1(itemID3, 270, 500, 3000);	// 对称轴 左侧
 						break;
 						
 					case 311:	// 右手放锤
 					case 312:	// 左手放锤
-						Spawnitem1(itemID4, 180, 500, 6000);	// 对称轴 头部
-						Spawnitem1(itemID4, 0, 500, 6000);		// 对称轴 尾部
+						Spawnitem1(itemID3, 180, 500, 6000);	// 对称轴 头部
+						Spawnitem1(itemID3, 0, 500, 6000);		// 对称轴 尾部
 						break;
 						
 					case 119:	// 光柱+告示牌
@@ -339,7 +339,7 @@ module.exports = function BaharrGuide(mod) {
 	function TEST1() {
 		mod.send('S_SPAWN_BUILD_OBJECT', 2, {
 			gameId : 222222222n,
-			itemId : 1,
+			itemId : itemID1,
 			loc : new Vec3(-114567, 115063, 4022),
 			w : 3,
 			unk : 0,
