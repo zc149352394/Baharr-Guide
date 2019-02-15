@@ -5,12 +5,9 @@
 			"overwrite": false,
 			"hash": "6680d5354f69891a60a16f03e02e953139b9ad10734c001f237f48df885fc101"
 		},
-		"hotdot/hotdot-TW.tsv": "fb62913568020853cf185fe9f337fa39710374610d421c9b633553c850a2d98e",
 		"index.js": "27a16da18a40cfce77d1afbe25c0f0912e00f8c241e70b9abe94fa9963513dab",
 		"module.json": "894d3ba225ce45df637030c08aada45d67a492a42581d71020fab23561c37c1c",
-		"skillsList.js": "8fdc527043fcf962a2d4d2a1e95db44bc6303a11100127b8609207aed90f4e10",
-		"skillsjson/444_cn.json": "d80bad85759ebbd8ecb5045395f32d43418c55f2b60bb959e7b3b2ba11fd3d53",
-		"skillsjson/444_default.json": "585dfb12d98616f1438954630beb218aa14de684218675c1a64d1c6926e94389"
+		"skillsList.js": "8fdc527043fcf962a2d4d2a1e95db44bc6303a11100127b8609207aed90f4e10"
 	},
 	"defs": {
 		"S_ABNORMALITY_BEGIN": 3,
