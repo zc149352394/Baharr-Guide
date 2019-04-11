@@ -1,13 +1,16 @@
 {
-	"disableAutoUpdate": false,
-	"name": "Baharr-Guide",
-	"options": {
-		"niceName": "Baharr-Guide",
-		"guiName": "Baharr-Guide"
-	},
-	"author": "ZC",
-	"description": "巴哈勒火神殿",
-	"servers": ["https://raw.githubusercontent.com/zc149352394/Baharr-Guide/master/"],
-	"supportUrl": "https://github.com/zc149352394/Baharr-Guide/issues",
-	"version": "1.0"
+    "disableAutoUpdate": false,
+    "name": "Baharr-Guide",
+    "options": {
+        "niceName": "火神辅助",
+        "guiName": "火神辅助",
+        "settingsFile": "config.json",
+        "settingsMigrator": "settings_migrator.js",
+        "settingsVersion": 1
+    },
+    "author": "ZC",
+    "description": "巴哈勒火神殿",
+    "servers": ["https://raw.githubusercontent.com/zc149352394/Baharr-Guide/master/"],
+    "supportUrl": "https://github.com/zc149352394/Baharr-Guide/issues",
+    "version": "80.04"
 }
