@@ -178,7 +178,7 @@ module.exports = function BaharrGuide(mod) {
 		skillid = event.skill.id % 1000;
 		
 		let bossSkillID;
-		if (bossSkillID = mod.settings.BossActions.find(obj => obj.id === skillid))) {
+		if (bossSkillID = mod.settings.BossActions.find(obj => obj.id === skillid)) {
 			noticeMessage(bossSkillID.msg);
 		}
 		
