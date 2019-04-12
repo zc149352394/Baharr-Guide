@@ -1,13 +1,13 @@
 const DefaultSettings = {
-    "enabled": true,
+    "enabled": true,              // 模块启动开关
     "sendToAlert": true,          // 屏中警告
     "sendToNotice": true,         // 队长通知
     "sendToMessage": true,        // 代理频道
     "itemsHelp": true,            // 地面提示
-    "itemID1": ,                  // 告示牌: 1一般布告栏, 2兴高采烈布告栏, 3狂人布告栏
-    "itemID2": ,                  // 战利品: 古龍貝勒古斯的頭 (光柱), 369: 鑽石
-    "itemID3" ,                   // 采集物: 445艾普罗
-    "itemID4": ,                  // 采集物: 912鸵鸟蛋
+    "itemID1": 2,                 // 告示牌: 1一般布告栏, 2兴高采烈布告栏, 3狂人布告栏
+    "itemID2": 98260,             // 战利品: 古龍貝勒古斯的頭 (光柱), 369: 鑽石
+    "itemID3" 445,                // 采集物: 445艾普罗
+    "itemID4": 912,               // 采集物: 912鸵鸟蛋
     "BossName": ["封印之门", "一阶", "二阶"],
     "BossActions": [
         {id: 101, msg: '锤地 270 重击'},

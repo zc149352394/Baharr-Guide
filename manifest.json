@@ -3,7 +3,7 @@
         "README.md": "c7747d33faca819e1cde785776664b9ad2b67e2c71a73bb19acca313646284b0",
         "index.js": "5a2994c4f7edc5af334a5583b7992f0770daf84811833f1e1f4e844120d0261b",
         "module.json": "d5283bcb0d04c3811c923c941daef176d9ed90cb7ce16ab58f243d12f08d110b",
-        "settings_migrator.js": "87f31d768a96ee77578011552f38cc0e72f5a0ed8a0458f553dd531c44c34c26"
+        "settings_migrator.js": "b04135ef86e9d12e8b46bb68fef3ea4ff10bc2d2f873495a011925c8330943e8"
     },
     "defs": {
         "S_ABNORMALITY_BEGIN": 3,
