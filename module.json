@@ -1,16 +1,19 @@
 {
     "disableAutoUpdate": false,
-    "name": "Baharr-Guide",
+    "name": "Guide-Baharr",
     "options": {
-        "niceName": "火神辅助",
-        "guiName": "火神辅助",
+        "niceName": "Guide-Baharr",
+        "guiName": "Guide-Baharr",
         "settingsFile": "config.json",
         "settingsMigrator": "settings_migrator.js",
         "settingsVersion": 1
     },
     "author": "ZC",
     "description": "巴哈勒火神殿",
-    "servers": ["https://raw.githubusercontent.com/zc149352394/Baharr-Guide/master/"],
-    "supportUrl": "https://github.com/zc149352394/Baharr-Guide/issues",
+    "servers": ["https://raw.githubusercontent.com/tera-mod/Guide-Baharr/master/"],
+    "supportUrl": "https://github.com/tera-mod/Guide-Baharr/issues",
+    "dependencies": {
+        "tera-message": "https://raw.githubusercontent.com/tera-mod/tera-message/master/module.json"
+    },
     "version": "81.03"
 }

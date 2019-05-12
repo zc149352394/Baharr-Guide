@@ -1,7 +1,6 @@
-String.prototype.clr = function (hexColor) { return `<font color='#${hexColor}'>${this}</font>` };
-
 module.exports = function BaharrGuide(mod) {
-	const command = mod.command || mod.require.command;
+	const Message = require('../tera-message')
+	const MSG = new Message(mod)
 	const Vec3 = require('tera-vec3');
 	if (mod.proxyAuthor !== 'caali') {
 		const options = require('./module').options
@@ -41,39 +40,35 @@ module.exports = function BaharrGuide(mod) {
 		uid1 = 899999999n,
 		uid2 = 799999999n,
 		
-		timeOut = 0;
+		timeOut = null;
 	
 	mod.command.add("巴哈", (arg) => {
 		if (!arg) {
 			mod.settings.enabled = !mod.settings.enabled;
-			sendMessage("辅助提示 " + (mod.settings.enabled ? "启用".clr('56B4E9') : "禁用".clr('E69F00')));
+			MSG.chat("辅助提示 " + (mod.settings.enabled ? MSG.BLU("开启") : MSG.YEL("关闭")));
 		} else {
 			switch (arg) {
 				case "警告":
 					mod.settings.sendToAlert = !mod.settings.sendToAlert;
-					sendMessage("警告通知 " + (mod.settings.sendToAlert ? "启用".clr('56B4E9') : "禁用".clr('E69F00')));
+					MSG.chat("警告消息 " + (mod.settings.sendToAlert ? MSG.BLU("启用") : MSG.YEL("禁用")));
 					break;
-				case "队长":
+				case "通知":
 					mod.settings.sendToNotice = !mod.settings.sendToNotice;
-					sendMessage("队长通知 " + (mod.settings.sendToNotice ? "启用".clr('56B4E9') : "禁用".clr('E69F00')));
-					break;
-				case "代理":
-					mod.settings.sendToMessage = !mod.settings.sendToMessage;
-					sendMessage("代理通知 " + (mod.settings.sendToMessage ? "启用".clr('56B4E9') : "禁用".clr('E69F00')));
+					MSG.chat("通知消息 " + (mod.settings.sendToNotice ? MSG.BLU("队长(仅自己)") : MSG.YEL("代理")));
 					break;
 				case "地面":
 					mod.settings.itemsHelp = !mod.settings.itemsHelp;
-					sendMessage("地面提示 " + (mod.settings.itemsHelp ? "启用".clr('56B4E9') : "禁用".clr('E69F00')));
+					MSG.chat("地面提示 " + (mod.settings.itemsHelp ? MSG.BLU("启用") : MSG.YEL("禁用")));
 					break;
 				case "debug":
-					sendMessage("模块开关: " + `${mod.settings.enabled}`.clr('00FFFF'));
-					sendMessage("副本地图: " + insidemap);
-					sendMessage("副本首领: " + whichboss);
-					sendMessage("警告通知 " + (mod.settings.sendToAlert ? "启用".clr('56B4E9') : "禁用".clr('E69F00')));
-					sendMessage("队长通知 " + (mod.settings.sendToNotice ? "启用".clr('56B4E9') : "禁用".clr('E69F00')));
-					sendMessage("职业分类 " + (isTank ? "坦克".clr('00FFFF') : "打手".clr('FF0000')));
-					alertMessage("alertMessageTEST");
-					noticeMessage("noticeMessageTEST");
+					MSG.chat("模块开关: " + MSG.TIP(mod.settings.enabled));
+					MSG.chat("副本地图: " + insidemap);
+					MSG.chat("副本首领: " + whichboss);
+					MSG.chat("警告通知 " + (mod.settings.sendToAlert ? MSG.BLU("启用") : MSG.YEL("禁用")));
+					MSG.chat("队长通知 " + (mod.settings.sendToNotice ? MSG.BLU("启用") : MSG.YEL("禁用")));
+					MSG.chat("职业分类 " + (isTank ? MSG.BLU("坦克") : MSG.YEL("打手")));
+					alertMessage("test");
+					noticeMessage("test");
 					break;
 				case "test1":
 					TEST1();
@@ -82,7 +77,7 @@ module.exports = function BaharrGuide(mod) {
 					TEST2();
 					break;
 				default :
-					sendMessage(`无效的参数!`.clr('FF0000'));
+					MSG.chat(MSG.RED("无效的参数!"));
 					break;
 			}
 		}
@@ -116,7 +111,7 @@ module.exports = function BaharrGuide(mod) {
 	
 	mod.hook('S_SPAWN_ME', 3, (event) => {
 		if (!mod.settings.enabled || !insidemap || !checkBoss) return;
-		sendMessage("进入副本: " + "火神殿 ".clr('56B4E9') + `${mod.settings.BossName[whichboss]}`.clr('FF0000'));
+		MSG.chat("进入副本 " + MSG.TIP("火神殿 ") + MSG.BLU(mod.settings.BossName[whichboss]));
 	});
 	
 	function load() {
@@ -144,7 +139,7 @@ module.exports = function BaharrGuide(mod) {
 		}
 		bossId = event.id;
 		checkBoss = false;
-		sendMessage("巴哈勒 " + `${mod.settings.BossName[whichboss]}`.clr('FF0000'));
+		MSG.chat("巴哈勒 " + MSG.TIP(mod.settings.BossName[whichboss]));
 	}
 	
 	function sActionStage(event) {
@@ -160,11 +155,11 @@ module.exports = function BaharrGuide(mod) {
 			
 			skill = event.skill.id % 1000;
 			if (skill == 201) {
-				alertMessage("红眼射线 (秒杀)");
+				alertMessage("红眼射线 (激活)");
 				return;
 			}
 			if (skill == 305) {
-				noticeMessage(`<font color="#FF0000">红眼射线 (秒杀)</font>`);
+				noticeMessage(`<font color="#FF0000"> --- 红眼射线 (秒杀) --- </font>`);
 				if (mod.settings.itemsHelp) {
 					Spawnitem1(mod.settings.itemID4, 180, 3000, 4000);
 				}
@@ -252,13 +247,7 @@ module.exports = function BaharrGuide(mod) {
 				Spawnitem1(mod.settings.itemID3, 0, 500, 6000);
 				
 				timeOut = setTimeout(() => {
-					mod.send('S_CHAT', 2, {
-						channel: 25,
-						authorName: "巴哈勒",
-						message: "四连半月 已就绪"
-					});
-					
-					alertMessage("四连半月 已就绪");
+					alertMessage("四连半月 (就绪)");
 				}, 60000);
 				break;
 				
@@ -295,9 +284,9 @@ module.exports = function BaharrGuide(mod) {
 		
 		/* 发光后砸 技能判定机制 不稳定(不准确) */
 		
-		if (event.id == 90444001 && skillid == 104) setTimeout(() => { if (shining) noticeMessage("发光后砸"); }, 500);
-		if (event.id == 90442000 && skillid == 134) setTimeout(() => { if (shining) noticeMessage("发光后砸"); }, 300);
-		if (event.id == 90444001 && skillid == 118) setTimeout(() => { if (shining) noticeMessage("发光后砸"); }, 300);
+		if (event.id == 90444001 && skillid == 104) setTimeout(() => { if (shining) alertMessage("发光后砸"); }, 500);
+		if (event.id == 90442000 && skillid == 134) setTimeout(() => { if (shining) alertMessage("发光后砸"); }, 300);
+		if (event.id == 90444001 && skillid == 118) setTimeout(() => { if (shining) alertMessage("发光后砸"); }, 300);
 	}
 	
 	function unload() {
@@ -310,27 +299,16 @@ module.exports = function BaharrGuide(mod) {
 	
 	function alertMessage(msg) {
 		if (mod.settings.sendToAlert) {
-			mod.send('S_DUNGEON_EVENT_MESSAGE', 2, {
-				type: 43,
-				chat: 0,
-				channel: 0,
-				message: msg
-			});
+			MSG.alert(msg, 49)
 		}
 	}
 	
 	function noticeMessage(msg) {
 		if (mod.settings.sendToNotice) {
-			mod.send('S_CHAT', 2, {
-				channel: 21,
-				authorName: "巴哈勒",
-				message: msg
-			});
+			MSG.party(msg);
+		} else {
+			MSG.chat(msg)
 		}
-	}
-	
-	function sendMessage(msg) {
-		mod.command.message(msg);
 	}
 	
 	function TEST1() {
@@ -378,9 +356,9 @@ module.exports = function BaharrGuide(mod) {
 			loc: curLocation,
 			amount: 1,
 			expiry: 600000,
-			owners: [{
-				id: 0
-			}]
+			owners: [
+				{playerId: mod.game.me.playerId}
+			]
 		});
 		if (hide) { curLocation.z = curLocation.z + 1000; }
 		
@@ -440,4 +418,5 @@ module.exports = function BaharrGuide(mod) {
 			Spawnitem(item, degrees, radius, times);
 		}
 	}
+	
 }
