@@ -64,8 +64,8 @@ module.exports = function BaharrGuide(mod) {
 					MSG.chat("模块开关: " + MSG.TIP(mod.settings.enabled));
 					MSG.chat("副本地图: " + insidemap);
 					MSG.chat("副本首领: " + whichboss);
-					MSG.chat("警告通知 " + (mod.settings.sendToAlert ? MSG.BLU("启用") : MSG.YEL("禁用")));
-					MSG.chat("队长通知 " + (mod.settings.sendToNotice ? MSG.BLU("启用") : MSG.YEL("禁用")));
+					MSG.chat("警告消息 " + (mod.settings.sendToAlert ? MSG.BLU("启用") : MSG.YEL("禁用")));
+					MSG.chat("通知消息 " + (mod.settings.sendToNotice ? MSG.BLU("自己") : MSG.YEL("代理")));
 					MSG.chat("职业分类 " + (isTank ? MSG.BLU("坦克") : MSG.YEL("打手")));
 					alertMessage("test");
 					noticeMessage("test");
