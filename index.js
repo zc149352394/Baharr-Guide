@@ -1,292 +1,75 @@
-module.exports = function BaharrGuide(mod) {
-	const Message = require('../tera-message')
-	const MSG = new Message(mod)
-	const Vec3 = require('tera-vec3');
-	if (mod.proxyAuthor !== 'caali') {
-		const options = require('./module').options
-		if (options) {
-			const settingsVersion = options.settingsVersion
-			if (settingsVersion) {
-				mod.settings = require('./' + (options.settingsMigrator || 'settings_migrator.js'))(mod.settings._version, settingsVersion, mod.settings)
-				mod.settings._version = settingsVersion
-			}
-		}
+const Vec3 = require('tera-vec3');
+const Baharr = {
+		103: {msg: '前砸 (闪避)'},
+		111: {msg: '后砸 (慢慢慢慢)'},
+		139: {msg: '转圈 (击倒)'},
+		125: {msg: '右 前砸(闪) | 后拉'},
+		131: {msg: '左 范围(挡) | 后拉'},
+		308: {msg: '第1次晕'},
+		309: {msg: '第2次晕'},
+		310: {msg: '第3次晕'},
+// 圆圈类
+		114: {msg: '捶地 (秒杀)'},
+		116: {msg: '甜甜圈'},
+		112: {msg: '完美格挡'},
+		135: {msg: '完美格挡'},
+// 直线类
+		101: {msg: '锤地->270->重击'},
+		121: {msg: '左  (4连半月)'},
+		122: {msg: '左  第3下加速'},
+		123: {msg: '左  第2下加速'},
+		140: {msg: '右  (4连半月)'},
+		141: {msg: '右  第3下加速'},
+		142: {msg: '右  第2下加速'},
+		311: {msg: '补师开盾'},
+		312: {msg: '补师开盾'},
+		119: {msg: '→ BOSS 右侧安全 →'},
+		120: {msg: '← BOSS 左侧安全 ←'}
 	}
 	
-	const MapID = 9044;					// https://github.com/neowutran/TeraDpsMeterData/tree/master/dungeons
-	const ZoneID = 444;					// https://github.com/neowutran/TeraDpsMeterData/tree/master/monsters
-	const TemplateID = [1000, 2000];	// 一阶王 二阶王
-	
-	let isTank = false,
-		insidemap = false,
-		checkBoss = false,
-		whichboss = 0,
-		bossId = 0n,
-		
-		hooks = [],
-		
-		boss_CurLocation = null,
-		boss_CurAngle = null,
-		
-		curLocation = null,
-		curAngle = null,
-		
-		skill = null,
-		skillid = null,
-		
-		shining = false,
-		
-		uid0 = 999999999n,
-		uid1 = 899999999n,
-		uid2 = 799999999n,
-		
-		timeOut = null;
-	
-	mod.command.add("巴哈", (arg) => {
-		if (!arg) {
-			mod.settings.enabled = !mod.settings.enabled;
-			MSG.chat("辅助提示 " + (mod.settings.enabled ? MSG.BLU("开启") : MSG.YEL("关闭")));
-		} else {
-			switch (arg) {
-				case "警告":
-					mod.settings.sendToAlert = !mod.settings.sendToAlert;
-					MSG.chat("警告消息 " + (mod.settings.sendToAlert ? MSG.BLU("启用") : MSG.YEL("禁用")));
-					break;
-				case "通知":
-					mod.settings.sendToNotice = !mod.settings.sendToNotice;
-					MSG.chat("通知消息 " + (mod.settings.sendToNotice ? MSG.BLU("队长(仅自己)") : MSG.YEL("代理")));
-					break;
-				case "地面":
-					mod.settings.itemsHelp = !mod.settings.itemsHelp;
-					MSG.chat("地面提示 " + (mod.settings.itemsHelp ? MSG.BLU("启用") : MSG.YEL("禁用")));
-					break;
-				case "debug":
-					MSG.chat("模块开关: " + MSG.TIP(mod.settings.enabled));
-					MSG.chat("副本地图: " + insidemap);
-					MSG.chat("副本首领: " + whichboss);
-					MSG.chat("警告消息 " + (mod.settings.sendToAlert ? MSG.BLU("启用") : MSG.YEL("禁用")));
-					MSG.chat("通知消息 " + (mod.settings.sendToNotice ? MSG.BLU("自己") : MSG.YEL("代理")));
-					MSG.chat("职业分类 " + (isTank ? MSG.BLU("坦克") : MSG.YEL("打手")));
-					alertMessage("test");
-					noticeMessage("test");
-					break;
-				case "test1":
-					TEST1();
-					break;
-				case "test2":
-					TEST2();
-					break;
-				default :
-					MSG.chat(MSG.RED("无效的参数!"));
-					break;
-			}
-		}
+module.exports = function BahaarGuide(mod) {
+	let Enabled            =  true, // 总开关
+		itemID1            =   413, // 采集物: 413调味草
+		itemID2            =   553,
+	// 定义变量
+		hooks              = [],
+		boss_HP            = 0,     // BOSS 血量%
+		boss_GameID        = null,  // BOSS gameId
+		boss_CurLocation   = {},    // BOSS 坐标
+		boss_CurAngle      = 0,     // BOSS 角度
+		skillid            = 0,
+		uid1      = 999999999n,     // 告示牌UID
+		uid2      = 899999999n,     // 龙头UID
+		uid3      = 799999999n,     // 花朵UID
+		curLocation        = {},    // 地面提示 坐标 x y z
+		curAngle           = 0,     // 地面提示 角度
+		shining            = false;
+	// 控制命令
+	mod.command.add(["巴哈", "Bahaar"], (arg) => {
+		Enabled = !Enabled;
+		mod.command.message("Bahaar-Guide " + (Enabled ? "启用(ON)" : "禁用(OFF)"));
 	});
-	
-	mod.game.on('enter_game', () => {
-		let job = (mod.game.me.templateId - 10101) % 100;
-		if (job === 1 || job === 10) {					// 0-双刀, 1-枪骑, 2-大剑, 3-斧头, 4-魔道
-			isTank = true;								// 5-弓箭, 6-祭司, 7-元素, 8-飞镰, 9-魔工
-		} else {										// 10-拳师, 11-忍者 12 月光
-			isTank = false;
-		}
-	});
-	
+	// 切换场景
 	mod.game.me.on('change_zone', (zone, quick) => {
-		if (zone === MapID) {
-			insidemap = true;
-			checkBoss = true;
-			clearInterval(timeOut);
+		if (zone == 9044) {
 			load();
+			mod.command.message("进入副本 巴哈勒神殿");
 		} else {
-			insidemap = false;
-			checkBoss = false;
-			whichboss = 0;
-			shining = false;
-			clearInterval(timeOut);
-			TEST2();
 			unload();
+			reset();
 		}
-	});
-	
-	mod.hook('S_SPAWN_ME', 3, (event) => {
-		if (!mod.settings.enabled || !insidemap || !checkBoss) return;
-		MSG.chat("进入副本 " + MSG.TIP("火神殿 ") + MSG.BLU(mod.settings.BossName[whichboss]));
-	});
+	})
 	
 	function load() {
 		if (!hooks.length) {
-			hook('S_BOSS_GAGE_INFO', 3, sBossGageInfo);
-			hook('S_ACTION_STAGE', 9, sActionStage);
+			hook('S_BOSS_GAGE_INFO',    3, sBossGageInfo);
 			hook('S_ABNORMALITY_BEGIN', 3, sAbnormalityBegin);
+			hook('S_ACTION_STAGE',      9, sActionStage);
 		}
 	}
 	
 	function hook() {
 		hooks.push(mod.hook(...arguments));
-	}
-	
-	function sBossGageInfo(event) {
-		if (!mod.settings.enabled || !insidemap || !checkBoss) return;
-		
-		if (event.templateId === TemplateID[0]) {
-			whichboss = 1;
-		} else if (event.templateId === TemplateID[1]) {
-			whichboss = 2;
-			TEST1();
-		} else {
-			whichboss = 0;
-		}
-		bossId = event.id;
-		checkBoss = false;
-		MSG.chat("巴哈勒 " + MSG.TIP(mod.settings.BossName[whichboss]));
-	}
-	
-	function sActionStage(event) {
-		if (!mod.settings.enabled || !insidemap) return;
-		
-		if (event.stage > 0) return;
-		
-		/* 文本通知提示 */
-		
-		if (event.templateId == 2500) {
-			curLocation = event.loc;
-			curAngle = event.w;
-			
-			skill = event.skill.id % 1000;
-			if (skill == 201) {
-				alertMessage("红眼射线 (激活)");
-				return;
-			}
-			if (skill == 305) {
-				noticeMessage(`<font color="#FF0000"> --- 红眼射线 (秒杀) --- </font>`);
-				if (mod.settings.itemsHelp) {
-					Spawnitem1(mod.settings.itemID4, 180, 3000, 4000);
-				}
-				return;
-			}
-		}
-		
-		if (!(TemplateID.includes(event.templateId))) return;
-		
-		skillid = event.skill.id % 1000;
-		
-		let bossSkillID;
-		if (bossSkillID = mod.settings.BossActions.find(obj => obj.id === skillid)) {
-			noticeMessage(bossSkillID.msg);
-		}
-		
-		/* 地面范围提示 */
-		
-		if (!mod.settings.itemsHelp) return;
-		
-		boss_CurLocation = event.loc;
-		boss_CurAngle = event.w;
-		curLocation = boss_CurLocation;
-		curAngle = boss_CurAngle;
-		
-		switch (skillid) {
-			case 103:	// 前砸 103 104
-			case 125:	// 右前砸 125 126 127
-				SpawnThing(true, 184, 400, 100);
-				Spawnitem2(mod.settings.itemID3, 8, 350, 3000);
-				break;
-				
-			case 131:	// 左前砸 131 132 134
-				SpawnThing(true, 182, 340, 100);
-				Spawnitem2(mod.settings.itemID3, 8, 660, 4000);
-				break;
-				
-			case 126:	// 右后拉 125 126 127
-			case 132:	// 左后拉 131 132 134
-				Spawnitem1(mod.settings.itemID3, 180, 500, 2000);	// 对称轴 头部
-				Spawnitem1(mod.settings.itemID3, 0, 500, 2000);		// 对称轴 尾部
-				if (skillid === 126) {
-					SpawnThing(true, 90, 200, 100);		// 右后拉
-				}
-				if (skillid === 132) {
-					SpawnThing(true, 270, 200, 100);	// 左后拉
-				}
-				Spawnitem1(mod.settings.itemID3, 180, 500, 2000);
-				Spawnitem1(mod.settings.itemID3, 0, 500, 2000);
-				break;
-				
-			case 112:	// 完美格挡
-			case 135:
-				SpawnThing(true, 184, 220, 100);
-				Spawnitem2(mod.settings.itemID3, 12, 210, 4000);
-				break;
-				
-			case 114:	// 捶地
-				SpawnThing(true, 184, 260, 100);
-				Spawnitem2(mod.settings.itemID3, 10, 320, 4000);
-				break;
-				
-			case 116:	// 点名后甜甜圈
-				Spawnitem2(mod.settings.itemID3, 8, 290, 6000);
-				break;
-				
-			case 111:	// 后砸 (慢慢慢慢)
-			case 137:	// 后砸
-				SpawnThing(true, 0, 500, 100);
-				Spawnitem2(mod.settings.itemID3, 8, 480, 2000);
-				break;
-				
-			case 121:	// 左脚→(4连火焰)
-			case 122:
-			case 123:
-			case 140:	// 右脚←(4连火焰)
-			case 141:
-			case 142:
-				SpawnThing(true, 90, 50, 100);
-				Spawnitem1(mod.settings.itemID3, 180, 500, 6000);
-				Spawnitem1(mod.settings.itemID3, 0, 500, 6000);
-				
-				SpawnThing(true, 270, 100, 100);
-				Spawnitem1(mod.settings.itemID3, 180, 500, 6000);
-				Spawnitem1(mod.settings.itemID3, 0, 500, 6000);
-				
-				timeOut = setTimeout(() => {
-					alertMessage("四连半月 (就绪)");
-				}, 60000);
-				break;
-				
-			case 101:	// 锤地(三连击)
-				Spawnitem1(mod.settings.itemID3, 345, 500, 4000);	// 对称轴 尾部
-				Spawnitem1(mod.settings.itemID3, 270, 500, 3000);	// 对称轴 左侧
-				break;
-				
-			case 311:	// 右手放锤
-			case 312:	// 左手放锤
-				Spawnitem1(mod.settings.itemID3, 180, 500, 6000);	// 对称轴 头部
-				Spawnitem1(mod.settings.itemID3, 0, 500, 6000);		// 对称轴 尾部
-				break;
-				
-			case 119:	// 光柱+告示牌
-				SpawnThing(false, 270, 300, 2000);
-				break;
-			case 120:
-				SpawnThing(false, 90, 300, 2000);
-				break;
-				
-			default :
-				break;
-		}
-	}
-	
-	function sAbnormalityBegin(event) {
-		if (Number(event.target) != Number(bossId)) return;
-		
-		if (event.id == 90442304) noticeMessage("以 [暈眩技能] 阻止 震怒的暴風 施展");
-		
-		if (event.id == 90442000) shining = true;
-		if (event.id == 90442001) shining = false;
-		
-		/* 发光后砸 技能判定机制 不稳定(不准确) */
-		
-		if (event.id == 90444001 && skillid == 104) setTimeout(() => { if (shining) alertMessage("发光后砸"); }, 500);
-		if (event.id == 90442000 && skillid == 134) setTimeout(() => { if (shining) alertMessage("发光后砸"); }, 300);
-		if (event.id == 90444001 && skillid == 118) setTimeout(() => { if (shining) alertMessage("发光后砸"); }, 300);
 	}
 	
 	function unload() {
@@ -297,126 +80,205 @@ module.exports = function BaharrGuide(mod) {
 		}
 	}
 	
-	function alertMessage(msg) {
-		if (mod.settings.sendToAlert) {
-			MSG.alert(msg, 49)
-		}
+	function reset() {
+		// 清除所有定时器
+		mod.clearAllTimeouts();
+		boss_GameID = null;
+		shining = false;
 	}
 	
-	function noticeMessage(msg) {
-		if (mod.settings.sendToNotice) {
-			MSG.party(msg);
-		} else {
-			MSG.chat(msg)
-		}
+	function sBossGageInfo(event) {
+		boss_HP = (Number(event.curHp) / Number(event.maxHp));
+		if (!boss_GameID) boss_GameID = event.id;
+		if (boss_HP <= 0 || boss_HP == 1) reset();
 	}
 	
-	function TEST1() {
-		mod.send('S_SPAWN_BUILD_OBJECT', 2, {
-			gameId : 222222222n,
-			itemId : mod.settings.itemID1,
-			loc : new Vec3(-114567, 115063, 4022),
-			w : 3,
-			unk : 0,
-			ownerName : "王座",
-			message : "王座方向"
-		});
-	}
-	
-	function TEST2() {
-		mod.send('S_DESPAWN_BUILD_OBJECT', 2, {
-			gameId : 222222222n,
-			unk : 0
-		});
-	}
-	
-	function SpawnThing(hide, degrees, radius, times) {
-		let r = null, rads = null, finalrad = null;
+	function sAbnormalityBegin(event) {
+		if (event.target != boss_GameID) return;
 		
-		r = curAngle - Math.PI;
+		if (event.id == 90442304) sendMessage("以 [暈眩技能] 阻止 震怒的暴風 施展", 25);
+		if (event.id == 90442000) shining = true;
+		if (event.id == 90442001) shining = false;
+		/* 发光后砸 技能判定机制 不稳定(不准确) */
+		if (event.id == 90444001 && skillid == 104) {
+			mod.setTimeout(() => {
+				if (shining) sendMessage("发光后砸", 25);
+			}, 500);
+		}
+		if (event.id == 90442000 && skillid == 134) {
+			mod.setTimeout(() => {
+				if (shining) sendMessage("发光后砸", 25);
+			}, 300);
+		}
+		if (event.id == 90444001 && skillid == 118) {
+			mod.setTimeout(() => {
+				if (shining) sendMessage("发光后砸", 25);
+			}, 300);
+		}
+	}
+	
+	function sActionStage(event) {
+		if (!Enabled || event.stage!==0) return;
+		// 巴哈勒 - 红眼射线
+		if (event.templateId == 2500 && event.skill.id == 2305) {
+			curLocation = event.loc;
+			curAngle = event.w;
+			SpawnString(itemID2, 180, 3000, 4000);
+			sendMessage("红眼射线(秒杀)", 25);
+			return;
+		}
+		
+		if (event.gameId != boss_GameID) return;
+		
+		skillid = event.skill.id % 1000; // 攻击技能编号简化 取1000余数运算
+		boss_CurLocation = event.loc;    // BOSS的 x y z 坐标
+		boss_CurAngle    = event.w;      // BOSS的角度
+		curLocation  = boss_CurLocation; // 传递BOSS坐标参数
+		curAngle     = boss_CurAngle;    // 传递BOSS角度参数
+		
+		if (!Baharr[skillid]) return;
+		sendMessage(Baharr[skillid].msg);
+		
+		switch (skillid) {
+			case 114: // 点名后捶地
+				SpawnThing(   false,  100, 184, 260);
+				SpawnCircle(itemID1, 4000,  10, 320);
+				break;
+			case 116: // 点名后甜甜圈
+				SpawnCircle(itemID1, 6000, 8, 290);
+				break;
+			case 112: // 完美格挡
+			case 135:
+				SpawnThing(   false,  100, 184, 220);
+				SpawnCircle(itemID1, 4000,  20, 210);
+				break;
+			case 101: // 锤地(三连击)
+				SpawnString(itemID1, 4000, 345, 500); // 对称轴 尾部
+				SpawnString(itemID1, 3000, 270, 500); // 对称轴 左侧
+				break;
+			case 121: // 四连半月
+			case 122:
+			case 123:
+			case 140:
+			case 141:
+			case 142:
+				SpawnThing(   false,  100,  90,  50);
+				SpawnString(itemID1, 6000,   0, 400);
+				SpawnString(itemID1, 6000, 180, 400);
+				
+				SpawnThing(   false,  100, 270,  50);
+				SpawnString(itemID1, 6000,   0, 400);
+				SpawnString(itemID1, 6000, 180, 400);
+				
+				mod.setTimeout(() => {
+					sendMessage("四连半月(就绪)", 25);
+				}, 60000);
+				break;
+			case 311: // 右手放锤
+			case 312: // 左手放锤
+				SpawnString(itemID1, 6000, 180, 500); // 对称轴 头部
+				SpawnString(itemID1, 6000,   0, 500); // 对称轴 尾部
+				break;
+			case 119: // 二阶 左/右手放锤 左/右半屏击飞
+				SpawnThing(true, 5000, 270, 250);
+				break;
+			case 120:
+				SpawnThing(true, 5000,  90, 250);
+				break;
+			default:
+				break;
+		}
+	}
+	// 发送提示文字
+	function sendMessage(msg, chl) {
+		mod.send('S_CHAT', 3 , {
+			channel: chl ? chl : 21, // 21 = 队长通知, 1 = 组队, 2 = 公会, 25 = 团长通知
+			name: 'DG-Guide',
+			message: msg,
+		})
+	}
+	// 地面提示(光柱+告示牌)
+	function SpawnThing(show, times, degrees, radius) {          // 是否显示 持续时间 偏移角度 半径距离
+		var r = null, rads = null, finalrad = null, spawnx = null, spawny = null;
+		
+		r = boss_CurAngle - Math.PI;
 		rads = (degrees * Math.PI/180);
 		finalrad = r - rads;
-		curLocation.x = boss_CurLocation.x + radius * Math.cos(finalrad);
-		curLocation.y = boss_CurLocation.y + radius * Math.sin(finalrad);
+		spawnx = boss_CurLocation.x + radius * Math.cos(finalrad);
+		spawny = boss_CurLocation.y + radius * Math.sin(finalrad);
 		
+		curLocation = new Vec3(spawnx, spawny, curLocation.z);
+		curAngle = boss_CurAngle;
+		
+		if (!show) return;
+		// 告示牌
 		mod.send('S_SPAWN_BUILD_OBJECT', 2, {
 			gameId : uid1,
-			itemId : mod.settings.itemID1,
+			itemId : 1,
 			loc : curLocation,
-			w : r,
-			unk : 0,
-			ownerName : "提示",
-			message : "安全区"
+			w : boss_CurAngle,
+			ownerName : "TIP",
+			message : "TIP"
 		});
-		
-		if (hide) { curLocation.z = curLocation.z - 1000; }
-		mod.send('S_SPAWN_DROPITEM', 7, {
+		// 龙头光柱
+		/* mod.send('S_SPAWN_DROPITEM', 8, {
 			gameId: uid2,
-			item: mod.settings.itemID2,
 			loc: curLocation,
+			item: 98260, // 古龙贝勒古斯的头
 			amount: 1,
-			expiry: 600000,
-			owners: [
-				{playerId: mod.game.me.playerId}
-			]
-		});
-		if (hide) { curLocation.z = curLocation.z + 1000; }
-		
+			expiry: 600000
+		}); */
+		// 延迟消除
 		setTimeout(DespawnThing, times, uid1, uid2);
 		uid1--;
 		uid2--;
 	}
-	
+	// 消除 光柱+告示牌
 	function DespawnThing(uid_arg1, uid_arg2) {
 		mod.send('S_DESPAWN_BUILD_OBJECT', 2, {
-			gameId : uid_arg1,
-			unk : 0
+			gameId : uid_arg1
 		});
 		mod.send('S_DESPAWN_DROPITEM', 4, {
 			gameId: uid_arg2
 		});
 	}
-	
-	function Spawnitem(item, degrees, radius, times) {
-		let r = null, rads = null, finalrad = null, spawnx = null, spawny = null, pos = null;
+	// 地面提示(花朵)
+	function SpawnItem(item, times, degrees, radius) {           // 显示物品 持续时间 偏移角度 半径距离
+		var r = null, rads = null, finalrad = null, spawnx = null, spawny = null;
 		
 		r = curAngle - Math.PI;
 		rads = (degrees * Math.PI/180);
 		finalrad = r - rads;
-		spawnx = curLocation.x + radius * Math.cos(finalrad);
-		spawny = curLocation.y + radius * Math.sin(finalrad);
-		pos = {x:spawnx, y:spawny};
-		
+		spawnx = curLocation.x + radius *Math.cos(finalrad);
+		spawny = curLocation.y + radius *Math.sin(finalrad);
+		// 花朵
 		mod.send('S_SPAWN_COLLECTION', 4, {
-			gameId : uid0,
+			gameId : uid3,
 			id : item,
 			amount : 1,
-			loc : new Vec3(pos.x, pos.y, curLocation.z),
-			w : r,
-			unk1 : 0,
-			unk2 : 0
+			loc : new Vec3(spawnx, spawny, curLocation.z),
+			w : r
 		});
-		
-		setTimeout(Despawn, times, uid0);
-		uid0--;
+		// 延时消除
+		setTimeout(Despawn, times, uid3);
+		uid3--;
 	}
-	
-	function Despawn(uid_arg0) {
+	// 消除 花朵
+	function Despawn(uid_arg3) {
 		mod.send('S_DESPAWN_COLLECTION', 2, {
-			gameId : uid_arg0
+			gameId : uid_arg3
 		});
 	}
-	
-	function Spawnitem1(item, degrees, maxRadius, times) {
-		for (var radius=50; radius<=maxRadius; radius+=50) {
-			Spawnitem(item, degrees, radius, times);
+	// 构造 直线花朵
+	function SpawnString(item, times, degrees, maxRadius) {      // 显示物品 持续时间 偏移角度 最远距离
+		for (var radius=50; radius<=maxRadius; radius+=50) {     // 默认间隔 50
+			SpawnItem(item, times, degrees, radius);
 		}
 	}
-	
-	function Spawnitem2(item, intervalDegrees, radius, times) {
+	// 构造 圆形花圈
+	function SpawnCircle(item, times, intervalDegrees, radius) { // 显示物品 持续时间 偏移间隔 半径距离
 		for (var degrees=0; degrees<360; degrees+=intervalDegrees) {
-			Spawnitem(item, degrees, radius, times);
+			SpawnItem(item, times, degrees, radius);
 		}
 	}
-	
 }
