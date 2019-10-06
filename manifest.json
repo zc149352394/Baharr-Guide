@@ -1,6 +1,6 @@
 {
     "files": {
-        "index.js": "7f35ac2db1d5fa898292be0613f7ca70209e6d9a3712e74ddee97b3a9ef4d199",
+        "index.js": "ae32f37e2bcc218619b69318ac9af84f31be4641b68c322cc0b340f359c93395",
         "module.json": "ea980d1c5b0e54cad8576c4d4e6058b2380e2a57622a042b90e84c82f974defe"
     },
     "defs": {
@@ -10,7 +10,6 @@
         "S_CHAT": 3,
         "S_DESPAWN_BUILD_OBJECT": 2,
         "S_DESPAWN_COLLECTION": 2,
-        "S_DESPAWN_DROPITEM": 4,
         "S_SPAWN_BUILD_OBJECT": 2,
         "S_SPAWN_COLLECTION": 4
     }
