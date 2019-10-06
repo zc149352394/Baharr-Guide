@@ -39,7 +39,6 @@ module.exports = function BahaarGuide(mod) {
 		boss_CurAngle      = 0,     // BOSS 角度
 		skillid            = 0,
 		uid1      = 999999999n,     // 告示牌UID
-		uid2      = 899999999n,     // 龙头UID
 		uid3      = 799999999n,     // 花朵UID
 		curLocation        = {},    // 地面提示 坐标 x y z
 		curAngle           = 0,     // 地面提示 角度
@@ -120,11 +119,11 @@ module.exports = function BahaarGuide(mod) {
 	function sActionStage(event) {
 		if (!Enabled || event.stage!==0) return;
 		// 巴哈勒 - 红眼射线
-		if (event.templateId == 2500 && event.skill.id == 2305) {
+		if (event.templateId == 2500 && event.skill.id == 1305) {
 			curLocation = event.loc;
 			curAngle = event.w;
 			SpawnString(itemID2, 180, 3000, 4000);
-			sendMessage("红眼射线(秒杀)", 25);
+			sendMessage(`<font color="#FF0000"> --- 红眼射线 (秒杀) --- </font>`, 25);
 			return;
 		}
 		
@@ -220,26 +219,14 @@ module.exports = function BahaarGuide(mod) {
 			ownerName : "TIP",
 			message : "TIP"
 		});
-		// 龙头光柱
-		/* mod.send('S_SPAWN_DROPITEM', 8, {
-			gameId: uid2,
-			loc: curLocation,
-			item: 98260, // 古龙贝勒古斯的头
-			amount: 1,
-			expiry: 600000
-		}); */
 		// 延迟消除
-		setTimeout(DespawnThing, times, uid1, uid2);
+		setTimeout(DespawnThing, times, uid1);
 		uid1--;
-		uid2--;
 	}
 	// 消除 光柱+告示牌
-	function DespawnThing(uid_arg1, uid_arg2) {
+	function DespawnThing(uid_arg1) {
 		mod.send('S_DESPAWN_BUILD_OBJECT', 2, {
 			gameId : uid_arg1
-		});
-		mod.send('S_DESPAWN_DROPITEM', 4, {
-			gameId: uid_arg2
 		});
 	}
 	// 地面提示(花朵)
