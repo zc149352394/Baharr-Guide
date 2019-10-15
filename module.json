@@ -2,11 +2,11 @@
     "name": "Baharr-Guide",
     "options": {
         "niceName": "Baharr-Guide",
-        "guiName": "Baharr-Guide"
+        "guiName": "火神副本(Baharr-Guide)"
     },
     "author": "ZC",
-    "description": "巴哈勒火神殿",
+    "description": "巴哈勒火神殿 副本攻击辅助提示",
     "servers": ["https://raw.githubusercontent.com/tera-mod/Baharr-Guide/master/"],
     "supportUrl": "https://github.com/tera-mod/Baharr-Guide/issues",
-    "version": "85.07"
+    "version": "86.05"
 }

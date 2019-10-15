@@ -30,7 +30,7 @@ const Baharr = {
 module.exports = function BahaarGuide(mod) {
 	let Enabled            =  true, // 总开关
 		itemID1            =   413, // 采集物: 413调味草
-		itemID2            =   553,
+		itemID2            =   912, // 采集物: 912鸵鸟蛋
 	// 定义变量
 		hooks              = [],
 		boss_HP            = 0,     // BOSS 血量%
@@ -62,7 +62,7 @@ module.exports = function BahaarGuide(mod) {
 	function load() {
 		if (!hooks.length) {
 			hook('S_BOSS_GAGE_INFO',    3, sBossGageInfo);
-			hook('S_ABNORMALITY_BEGIN', 3, sAbnormalityBegin);
+			hook('S_ABNORMALITY_BEGIN', 4, sAbnormalityBegin);
 			hook('S_ACTION_STAGE',      9, sActionStage);
 		}
 	}
@@ -122,7 +122,7 @@ module.exports = function BahaarGuide(mod) {
 		if (event.templateId == 2500 && event.skill.id == 1305) {
 			curLocation = event.loc;
 			curAngle = event.w;
-			SpawnString(itemID2, 180, 3000, 4000);
+			SpawnString(itemID2, 4000, 180, 3000);
 			sendMessage(`<font color="#FF0000"> --- 红眼射线 (秒杀) --- </font>`, 25);
 			return;
 		}

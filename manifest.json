@@ -1,10 +1,10 @@
 {
     "files": {
-        "index.js": "ae32f37e2bcc218619b69318ac9af84f31be4641b68c322cc0b340f359c93395",
-        "module.json": "ea980d1c5b0e54cad8576c4d4e6058b2380e2a57622a042b90e84c82f974defe"
+        "index.js": "191081117b69fdcb08050f4276ea1198e60b997314dc51683c8ed0df98a4eaf9",
+        "module.json": "9d50a5c90bc7c9f8d4de200910ef95bf3b9dfa460be9fdf3e605b72944860cf7"
     },
     "defs": {
-        "S_ABNORMALITY_BEGIN": 3,
+        "S_ABNORMALITY_BEGIN": 4,
         "S_ACTION_STAGE": 9,
         "S_BOSS_GAGE_INFO": 3,
         "S_CHAT": 3,
