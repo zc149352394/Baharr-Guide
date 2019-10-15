@@ -46,7 +46,7 @@ module.exports = function BahaarGuide(mod) {
 	// 控制命令
 	mod.command.add(["巴哈", "Bahaar"], (arg) => {
 		Enabled = !Enabled;
-		mod.command.message("Bahaar-Guide " + (Enabled ? "启用(ON)" : "禁用(OFF)"));
+		mod.command.message("Bahaar-Guide: " + (Enabled ? "启用(ON)" : "禁用(OFF)"));
 	});
 	// 切换场景
 	mod.game.me.on('change_zone', (zone, quick) => {
