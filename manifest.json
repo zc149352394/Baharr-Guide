@@ -1,7 +1,7 @@
 {
     "files": {
         "index.js": "80d15f536e21038c09337991aa63b40ec32c0889a9847f4db45c445accd06e0a",
-        "module.json": "faf83d566ee766e4bcae4a9a7823eeb3f269a0787ff9188c864d027b616ca745"
+        "module.json": "76979de74459985ed9ceff34ab6865da23684ae48ef94d11926668ed3e14a88a"
     },
     "defs": {
         "S_ABNORMALITY_BEGIN": 4,
